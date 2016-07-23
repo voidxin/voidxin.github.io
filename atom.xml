@@ -4,7 +4,7 @@
   <title><![CDATA[voidxin'blog]]></title>
   <link href="http://voidxin.github.io/atom.xml" rel="self"/>
   <link href="http://voidxin.github.io/"/>
-  <updated>2016-07-23T19:11:04+08:00</updated>
+  <updated>2016-07-23T19:15:32+08:00</updated>
   <id>http://voidxin.github.io/</id>
   <author>
     <name><![CDATA[voidxin]]></name>
@@ -14,260 +14,21 @@
 
   
   <entry>
-    <title type="html"><![CDATA[Objective-C runtime那些事儿]]></title>
-    <link href="http://voidxin.github.io/blog/2016/07/23/objective-c-runtimena-xie-shi-er/"/>
-    <updated>2016-07-23T18:32:34+08:00</updated>
-    <id>http://voidxin.github.io/blog/2016/07/23/objective-c-runtimena-xie-shi-er</id>
-    <content type="html"><![CDATA[<p>runtime 号称iOS开发的黑魔法。</p>
-
-<p>现在就让我来探究探究runtime，一来作为学习笔记，二来给有需要的人参考。</p>
-
-<p>在使用runtime的时候，我们可能会看到一些奇怪的字段，现在就让我来一一讲解一下：</p>
-
-<p>1：SEL</p>
-
-<pre><code> OC在编译时，根据方法的名字生成一个用来区分这个方法的唯一ID，这些SEL组成了一个set集合，当我们在这个集合中查找某个方法时，只需去查找这个方法所对应的SEL即可。所以，SEL的本质就是字符串。
-</code></pre>
-
-<p>2：id</p>
-
-<pre><code> id是一个指向objc_object结构体的指针。
-</code></pre>
-
-<p>3：isa</p>
-
-<pre><code> objective_c中的object在最后编译的时候会被转成c的结构体，而在这个结构体中有一个isa指针，指向它的类别class。所以，isa是一个指向类别class的结构体指针。
-</code></pre>
-
-<p>4：meta class
-     当我们发送一个消息给nsobject对象时，这条消息会在对象 的类的方法列表中查找。
-   当我们发送一个消息给一个类时，这条消息会在类的meta class的方法列表中寻找。故meta class就是一个类对象的class。</p>
-
-<p>5：IMP:</p>
-
-<pre><code> 本质就是一个函数指针，这个被指向的函数包含一个被接受消息的的对象id，调用方法的SEL以及一些方法的参数，并返回一个id，因此我们可以通过SEL获得它所对应的IMP，在取得了函数指针之后，也就意味着我们找到了需要执行方法的代码入口，这样我们就可以像普通的c语言函数调用一样使用这个行数指针。
-</code></pre>
-
-<p>6：Ivar:</p>
-
-<pre><code> 在object中被定义为：typedef struct objc_ivar，它是一个指向objc_ivar结构体的指针，结构体如下定义：
-</code></pre>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>              struct_objc_ivar{
-</span><span class='line'>                           char *ivar_name 
-</span><span class='line'>                           char *ivar_type
-</span><span class='line'>                           int ivar_offset
-</span><span class='line'>              }</span></code></pre></td></tr></table></div></figure>
-
-
-<p>主要的理论就是这些，接下来就看看怎么使用者高深莫测的runtime了。假设我们有一个实体类Car，它有如下两个属性。</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>@property(nonatomic,copy)NSString *brand;
-</span><span class='line'>@property(nonatomic,copy)NSString *engine;</span></code></pre></td></tr></table></div></figure>
-
-
-<p>在我们给定这两个参数初始值之后，如果你在程序的运行过程中想修改它的值，那么我们就可以使用runtime来进行变量的控制：</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>-(void)changeCar{
-</span><span class='line'>    unsigned int number=0;
-</span><span class='line'>    __weak typeof(self) weakSelf=self;
-</span><span class='line'>    Ivar *ivar=class_copyIvarList([self.car class], &number);
-</span><span class='line'>    for (int i=0; i&lt;number; i++) {
-</span><span class='line'>        Ivar var=ivar[i];
-</span><span class='line'>        const char *varName=ivar_getName(var);
-</span><span class='line'>        NSString *propertyName=[NSString stringWithUTF8String:varName];
-</span><span class='line'>        int y=arc4random()%7;
-</span><span class='line'>        if ([propertyName isEqualToString:@"_brand"]) {
-</span><span class='line'>            __strong typeof(weakSelf) strongSelf=weakSelf;
-</span><span class='line'>            object_setIvar(self.car, var, strongSelf.brandArray[y]);
-</span><span class='line'>            break;
-</span><span class='line'>        }
-</span><span class='line'>    }
-</span><span class='line'>    
-</span><span class='line'>    self.label.text=self.car.brand;
-</span><span class='line'>}
-</span><span class='line'>
-</span><span class='line'>//数组
-</span><span class='line'>- (NSArray *)brandArray{
-</span><span class='line'>    if (!_brandArray) {
-</span><span class='line'>        _brandArray=@[@"Benz",@"Honda",@"BMW",@"Lamborghini",@"Ferrari",@"Porsche",@"audio"];
-</span><span class='line'>    }
-</span><span class='line'>    return _brandArray;
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
-
-
-<p>这里是随机动态改变Car的brand，从兰博基尼到东风轰达随机切换。
-接下来就是使用runtime来动态添加方法：</p>
-
-<p>  ```
-- (void)viewDidLoad {
-    [super viewDidLoad];
-    // Do any additional setup after loading the view.</p>
-
-<pre><code>class_addMethod([self.car class], @selector(printParameter), (IMP)printParameter, "v@:");
-
-[self.button addTarget:self action:@selector(buttonAction) forControlEvents:UIControlEventTouchUpInside];
-</code></pre>
-
-<p>}</p>
-
-<p>void printParameter(id self,SEL _cmd){
-    NSLog(@&ldquo;5.2v10自然进气发动机610匹马力4轮驱动，0-100加速3.2s&rdquo;);</p>
-
-<p>}</p>
-
-<p>-(void)printParameter{</p>
-
-<p>}</p>
-
-<p>-(void)buttonAction{
-    if ([self.car performSelector:@selector(printParameter)]) {
-        [self.car performSelector:@selector(printParameter)];
-    }
-}</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>
-</span><span class='line'>以上代码表示每点击一次按钮就动态添加printParameter方法来输出当前Car的动力参数。
-</span><span class='line'>
-</span><span class='line'>接下来就看看怎么使用runtime来拦截和交换方法：
-</span><span class='line'>
-</span><span class='line'>     再引入plane实体，我们交换plane和car的参数输出函数，让汽车输出飞机的动力参数，代码如下：
-</span><span class='line'>     </span></code></pre></td></tr></table></div></figure>
-
-
-<ul>
-<li><p>(void)viewDidLoad {
-  [super viewDidLoad];
-  self.textView.text=@&ldquo;ready? go&rdquo;;
-}</p></li>
-<li><p>(void)didReceiveMemoryWarning {
-  [super didReceiveMemoryWarning];
-  // Dispose of any resources that can be recreated.
-}</p></li>
-<li><p>(IBAction)planePress:(id)sender {
-  self.textView.text=[self.plane planePowerTakeOff];
-}</p></li>
-<li><p>(IBAction)exchangePowerPress:(id)sender {
-  Method carMethod=class_getInstanceMethod([self.car class], @selector(carPowerTakeOff));
-  Method planeMethod=class_getInstanceMethod([self.plane class], @selector(planePowerTakeOff));
-  method_exchangeImplementations(carMethod, planeMethod);
-  self.textView.text=@&ldquo;power is Exchanged&rdquo;;
-}</p></li>
-<li>(IBAction)changePowerPress:(id)sender {
-  Method carMethod=class_getInstanceMethod([self.car class], @selector(carPowerTakeOff));
-  Method lannboMethod=class_getInstanceMethod([self class], @selector(changePower));
-  method_exchangeImplementations(carMethod, lannboMethod);
-   self.textView.text=@&ldquo;car power is changed&rdquo;;
-}</li>
-</ul>
-
-
-<p>-(NSString *)changePower{
-    return @&ldquo;我是兰博基尼超跑，我的动力比飞机还强，我到香港只需8分钟&rdquo;;
-}</p>
-
-<ul>
-<li>(IBAction)carPress:(id)sender {
-    self.textView.text=[self.car carPowerTakeOff];
-}</li>
-</ul>
-
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>
-</span><span class='line'>最后是使用runtime为方法添加新功能。
-</span><span class='line'>
-</span><span class='line'>这里我们给按钮的点击事件触发的方法添加新的功能。所以增加UIButton的分类，在分类中写入以下代码：
-</span><span class='line'>
-</span></code></pre></td></tr></table></div></figure>
-
-
-<ul>
-<li><p>(void)load{
-  static dispatch_once_t onceManager;
-  dispatch_once(&amp;onceManager, ^{
-      Class customerClass=[self class];
-      SEL oriSEL=@selector(sendAction:to:forEvent:);
-      Method oriMethod=class_getInstanceMethod(customerClass, oriSEL);</p>
-
-<pre><code>  SEL customerSEL=@selector(customerAction:to:forEvent:);
-  Method customerMethod=class_getInstanceMethod(customerClass, customerSEL);
-
-  BOOL isSuccess=class_addMethod(customerClass, oriSEL, method_getImplementation(customerMethod), method_getTypeEncoding(customerMethod));
-  if (isSuccess) {
-      class_replaceMethod(customerClass, customerSEL, method_getImplementation(oriMethod), method_getTypeEncoding(oriMethod));
-  }else{
-      method_exchangeImplementations(oriMethod, customerMethod);
-  }
-</code></pre>
-
-<p>  });
-}
--(void)customerAction:(SEL)action to:target forEvent:(UIEvent *)event{
-  NSLog(@&ldquo;我是披着奔驰外观的众泰,众泰汽车，实现您的豪车梦，哈哈哈&rdquo;);
-  [self customerAction:action to:target forEvent:event];
-}
-```</p></li>
-</ul>
-
-
-<p>自此，每次点击button触发的监听方法都将输出众泰汽车的广告。</p>
-
-<p>欧耶，runtime的常用功能就是这些，更高深的用法还在研究之中。最后，本着无demo不文章的精神，给出本篇文章我的github地址：<a href="https://github.com/voidxin/RunTimeDemo">https://github.com/voidxin/RunTimeDemo</a></p>
-
-<p>感谢google上各位老司机的技术分享，本文更多的是对各位老司机分享的总结和实践。谢谢。</p>
+    <title type="html"><![CDATA[越分享越牛逼]]></title>
+    <link href="http://voidxin.github.io/blog/2016/07/23/yue-fen-xiang-yue-niu-bi/"/>
+    <updated>2016-07-23T14:39:43+08:00</updated>
+    <id>http://voidxin.github.io/blog/2016/07/23/yue-fen-xiang-yue-niu-bi</id>
+    <content type="html"><![CDATA[<p>  我是voidxin，一名正在探索的iOS程序员，从此我就入住Octopress啦，在以后的日子里，我将在这里分享我的工作、生活以及技术。
+  之前一直是在简书上发表一些东西，然后最近一段时间觉得是时候自己开个博客了，于是就有了这个博客。我会把之前在简书上的文章都搬家过来，毕竟那些都是我这么久以来的心血。
+  一路走一路感悟，感悟生活感悟工作，毕业整整一年，工作整整两年。没有成长为大牛，也没进入世界五百强，coding的路上，有彷徨也有希望，我坚持我所坚持的，相信我所相信的，不断学习，不断进步，相信明天会更好。</p>
 ]]></content>
   </entry>
   
   <entry>
     <title type="html"><![CDATA[七牛云储存实现iOS企业版分发]]></title>
-    <link href="http://voidxin.github.io/blog/2016/07/23/qi-niu-yun-chu-cun-shi-xian-iosqi-ye-ban-fen-fa/"/>
-    <updated>2016-07-23T17:39:18+08:00</updated>
-    <id>http://voidxin.github.io/blog/2016/07/23/qi-niu-yun-chu-cun-shi-xian-iosqi-ye-ban-fen-fa</id>
+    <link href="http://voidxin.github.io/blog/2016/07/22/qi-niu-yun-chu-cun-shi-xian-iosqi-ye-ban-fen-fa/"/>
+    <updated>2016-07-22T11:39:18+08:00</updated>
+    <id>http://voidxin.github.io/blog/2016/07/22/qi-niu-yun-chu-cun-shi-xian-iosqi-ye-ban-fen-fa</id>
     <content type="html"><![CDATA[<p>iOS企业证书的发版这里就不多说了。
 由于app现在放在公司自己的服务器中，为了实现https的plist下载链接还特意把plist挂在了开源中国上。小公司，带宽小，多用户升级的时候给公司服务器带来不小的压力。所以最近工头有把ipa挂在七牛上去的想法，这样就可以有效的缓解服务器的压力。
 企业版分发的plist下载链接必须是https协议的，所以需要SSL证书。如果你公司没有证书，那么可以使用七牛。
@@ -445,17 +206,6 @@ ok，https链接的plist文件已生成，复制链接，在代码中：</p>
 <p>ok，以上总结有什么不对或瞎扯的地方欢迎在下方留言中指出。</p>
 
 <p>ps：无demo不文章，抱歉，真没有demo。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[越分享越牛逼]]></title>
-    <link href="http://voidxin.github.io/blog/2016/07/23/yue-fen-xiang-yue-niu-bi/"/>
-    <updated>2016-07-23T14:39:43+08:00</updated>
-    <id>http://voidxin.github.io/blog/2016/07/23/yue-fen-xiang-yue-niu-bi</id>
-    <content type="html"><![CDATA[<p>  我是voidxin，一名正在探索的iOS程序员，从此我就入住Octopress啦，在以后的日子里，我将在这里分享我的工作、生活以及技术。
-  之前一直是在简书上发表一些东西，然后最近一段时间觉得是时候自己开个博客了，于是就有了这个博客。我会把之前在简书上的文章都搬家过来，毕竟那些都是我这么久以来的心血。
-  一路走一路感悟，感悟生活感悟工作，毕业整整一年，工作整整两年。没有成长为大牛，也没进入世界五百强，coding的路上，有彷徨也有希望，我坚持我所坚持的，相信我所相信的，不断学习，不断进步，相信明天会更好。</p>
 ]]></content>
   </entry>
   
@@ -747,6 +497,256 @@ ok，https链接的plist文件已生成，复制链接，在代码中：</p>
 <p>自此，我们实现了一个简单的动态更新，如果以后你的项目想在发版之后修复bug的话，目前使用JSpatch是比较流行的选择。</p>
 
 <p>无Demo不文章，欢迎访问我的github下载本文的Demo：<a href="https://github.com/voidxin/JSPatchHotFixDemo">https://github.com/voidxin/JSPatchHotFixDemo</a></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Objective-C runtime那些事儿]]></title>
+    <link href="http://voidxin.github.io/blog/2016/06/15/objective-c-runtimena-xie-shi-er/"/>
+    <updated>2016-06-15T23:44:34+08:00</updated>
+    <id>http://voidxin.github.io/blog/2016/06/15/objective-c-runtimena-xie-shi-er</id>
+    <content type="html"><![CDATA[<p>runtime 号称iOS开发的黑魔法。</p>
+
+<p>现在就让我来探究探究runtime，一来作为学习笔记，二来给有需要的人参考。</p>
+
+<p>在使用runtime的时候，我们可能会看到一些奇怪的字段，现在就让我来一一讲解一下：</p>
+
+<p>1：SEL</p>
+
+<pre><code> OC在编译时，根据方法的名字生成一个用来区分这个方法的唯一ID，这些SEL组成了一个set集合，当我们在这个集合中查找某个方法时，只需去查找这个方法所对应的SEL即可。所以，SEL的本质就是字符串。
+</code></pre>
+
+<p>2：id</p>
+
+<pre><code> id是一个指向objc_object结构体的指针。
+</code></pre>
+
+<p>3：isa</p>
+
+<pre><code> objective_c中的object在最后编译的时候会被转成c的结构体，而在这个结构体中有一个isa指针，指向它的类别class。所以，isa是一个指向类别class的结构体指针。
+</code></pre>
+
+<p>4：meta class
+     当我们发送一个消息给nsobject对象时，这条消息会在对象 的类的方法列表中查找。
+   当我们发送一个消息给一个类时，这条消息会在类的meta class的方法列表中寻找。故meta class就是一个类对象的class。</p>
+
+<p>5：IMP:</p>
+
+<pre><code> 本质就是一个函数指针，这个被指向的函数包含一个被接受消息的的对象id，调用方法的SEL以及一些方法的参数，并返回一个id，因此我们可以通过SEL获得它所对应的IMP，在取得了函数指针之后，也就意味着我们找到了需要执行方法的代码入口，这样我们就可以像普通的c语言函数调用一样使用这个行数指针。
+</code></pre>
+
+<p>6：Ivar:</p>
+
+<pre><code> 在object中被定义为：typedef struct objc_ivar，它是一个指向objc_ivar结构体的指针，结构体如下定义：
+</code></pre>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>              struct_objc_ivar{
+</span><span class='line'>                           char *ivar_name 
+</span><span class='line'>                           char *ivar_type
+</span><span class='line'>                           int ivar_offset
+</span><span class='line'>              }</span></code></pre></td></tr></table></div></figure>
+
+
+<p>主要的理论就是这些，接下来就看看怎么使用者高深莫测的runtime了。假设我们有一个实体类Car，它有如下两个属性。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>@property(nonatomic,copy)NSString *brand;
+</span><span class='line'>@property(nonatomic,copy)NSString *engine;</span></code></pre></td></tr></table></div></figure>
+
+
+<p>在我们给定这两个参数初始值之后，如果你在程序的运行过程中想修改它的值，那么我们就可以使用runtime来进行变量的控制：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>-(void)changeCar{
+</span><span class='line'>    unsigned int number=0;
+</span><span class='line'>    __weak typeof(self) weakSelf=self;
+</span><span class='line'>    Ivar *ivar=class_copyIvarList([self.car class], &number);
+</span><span class='line'>    for (int i=0; i&lt;number; i++) {
+</span><span class='line'>        Ivar var=ivar[i];
+</span><span class='line'>        const char *varName=ivar_getName(var);
+</span><span class='line'>        NSString *propertyName=[NSString stringWithUTF8String:varName];
+</span><span class='line'>        int y=arc4random()%7;
+</span><span class='line'>        if ([propertyName isEqualToString:@"_brand"]) {
+</span><span class='line'>            __strong typeof(weakSelf) strongSelf=weakSelf;
+</span><span class='line'>            object_setIvar(self.car, var, strongSelf.brandArray[y]);
+</span><span class='line'>            break;
+</span><span class='line'>        }
+</span><span class='line'>    }
+</span><span class='line'>    
+</span><span class='line'>    self.label.text=self.car.brand;
+</span><span class='line'>}
+</span><span class='line'>
+</span><span class='line'>//数组
+</span><span class='line'>- (NSArray *)brandArray{
+</span><span class='line'>    if (!_brandArray) {
+</span><span class='line'>        _brandArray=@[@"Benz",@"Honda",@"BMW",@"Lamborghini",@"Ferrari",@"Porsche",@"audio"];
+</span><span class='line'>    }
+</span><span class='line'>    return _brandArray;
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>这里是随机动态改变Car的brand，从兰博基尼到东风轰达随机切换。
+接下来就是使用runtime来动态添加方法：</p>
+
+<p>  ```
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    // Do any additional setup after loading the view.</p>
+
+<pre><code>class_addMethod([self.car class], @selector(printParameter), (IMP)printParameter, "v@:");
+
+[self.button addTarget:self action:@selector(buttonAction) forControlEvents:UIControlEventTouchUpInside];
+</code></pre>
+
+<p>}</p>
+
+<p>void printParameter(id self,SEL _cmd){
+    NSLog(@&ldquo;5.2v10自然进气发动机610匹马力4轮驱动，0-100加速3.2s&rdquo;);</p>
+
+<p>}</p>
+
+<p>-(void)printParameter{</p>
+
+<p>}</p>
+
+<p>-(void)buttonAction{
+    if ([self.car performSelector:@selector(printParameter)]) {
+        [self.car performSelector:@selector(printParameter)];
+    }
+}</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>
+</span><span class='line'>以上代码表示每点击一次按钮就动态添加printParameter方法来输出当前Car的动力参数。
+</span><span class='line'>
+</span><span class='line'>接下来就看看怎么使用runtime来拦截和交换方法：
+</span><span class='line'>
+</span><span class='line'>     再引入plane实体，我们交换plane和car的参数输出函数，让汽车输出飞机的动力参数，代码如下：
+</span><span class='line'>     </span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li><p>(void)viewDidLoad {
+  [super viewDidLoad];
+  self.textView.text=@&ldquo;ready? go&rdquo;;
+}</p></li>
+<li><p>(void)didReceiveMemoryWarning {
+  [super didReceiveMemoryWarning];
+  // Dispose of any resources that can be recreated.
+}</p></li>
+<li><p>(IBAction)planePress:(id)sender {
+  self.textView.text=[self.plane planePowerTakeOff];
+}</p></li>
+<li><p>(IBAction)exchangePowerPress:(id)sender {
+  Method carMethod=class_getInstanceMethod([self.car class], @selector(carPowerTakeOff));
+  Method planeMethod=class_getInstanceMethod([self.plane class], @selector(planePowerTakeOff));
+  method_exchangeImplementations(carMethod, planeMethod);
+  self.textView.text=@&ldquo;power is Exchanged&rdquo;;
+}</p></li>
+<li>(IBAction)changePowerPress:(id)sender {
+  Method carMethod=class_getInstanceMethod([self.car class], @selector(carPowerTakeOff));
+  Method lannboMethod=class_getInstanceMethod([self class], @selector(changePower));
+  method_exchangeImplementations(carMethod, lannboMethod);
+   self.textView.text=@&ldquo;car power is changed&rdquo;;
+}</li>
+</ul>
+
+
+<p>-(NSString *)changePower{
+    return @&ldquo;我是兰博基尼超跑，我的动力比飞机还强，我到香港只需8分钟&rdquo;;
+}</p>
+
+<ul>
+<li>(IBAction)carPress:(id)sender {
+    self.textView.text=[self.car carPowerTakeOff];
+}</li>
+</ul>
+
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>
+</span><span class='line'>最后是使用runtime为方法添加新功能。
+</span><span class='line'>
+</span><span class='line'>这里我们给按钮的点击事件触发的方法添加新的功能。所以增加UIButton的分类，在分类中写入以下代码：
+</span><span class='line'>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<ul>
+<li><p>(void)load{
+  static dispatch_once_t onceManager;
+  dispatch_once(&amp;onceManager, ^{
+      Class customerClass=[self class];
+      SEL oriSEL=@selector(sendAction:to:forEvent:);
+      Method oriMethod=class_getInstanceMethod(customerClass, oriSEL);</p>
+
+<pre><code>  SEL customerSEL=@selector(customerAction:to:forEvent:);
+  Method customerMethod=class_getInstanceMethod(customerClass, customerSEL);
+
+  BOOL isSuccess=class_addMethod(customerClass, oriSEL, method_getImplementation(customerMethod), method_getTypeEncoding(customerMethod));
+  if (isSuccess) {
+      class_replaceMethod(customerClass, customerSEL, method_getImplementation(oriMethod), method_getTypeEncoding(oriMethod));
+  }else{
+      method_exchangeImplementations(oriMethod, customerMethod);
+  }
+</code></pre>
+
+<p>  });
+}
+-(void)customerAction:(SEL)action to:target forEvent:(UIEvent *)event{
+  NSLog(@&ldquo;我是披着奔驰外观的众泰,众泰汽车，实现您的豪车梦，哈哈哈&rdquo;);
+  [self customerAction:action to:target forEvent:event];
+}
+```</p></li>
+</ul>
+
+
+<p>自此，每次点击button触发的监听方法都将输出众泰汽车的广告。</p>
+
+<p>欧耶，runtime的常用功能就是这些，更高深的用法还在研究之中。最后，本着无demo不文章的精神，给出本篇文章我的github地址：<a href="https://github.com/voidxin/RunTimeDemo">https://github.com/voidxin/RunTimeDemo</a></p>
+
+<p>感谢google上各位老司机的技术分享，本文更多的是对各位老司机分享的总结和实践。谢谢。</p>
 ]]></content>
   </entry>
   
