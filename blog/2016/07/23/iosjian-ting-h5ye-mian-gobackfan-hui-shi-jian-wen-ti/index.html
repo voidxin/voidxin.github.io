@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>越分享越牛逼 - voidxin'blog</title>
+  <title>iOS监听H5页面goBack返回事件问题 - voidxin'blog</title>
   <meta name="author" content="voidxin">
 
   
-  <meta name="description" content="我是voidxin，一名正在探索的iOS程序员，从此我就入住Octopress啦，在以后的日子里，我将在这里分享我的工作、生活以及技术。 之前一直是在简书上发表一些东西，然后最近一段时间觉得是时候自己开个博客了，于是就有了这个博客。我会把之前在简书上的文章都搬家过来， &hellip;">
+  <meta name="description" content="从native直接push到一个webView页面，隐藏navigationBar，使用H5的头部为导航栏。此时会出现一个问题，就是push出的这个webview没有了原生的navigationBar，那么在点击H5页面上的返回按钮时怎么pop到之前的页面呢？ 当然， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://voidxin.github.io/blog/2016/07/23/yue-fen-xiang-yue-niu-bi/">
+  <link rel="canonical" href="http://voidxin.github.io/blog/2016/07/23/iosjian-ting-h5ye-mian-gobackfan-hui-shi-jian-wen-ti/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -77,7 +77,7 @@
   
   <header>
     
-      <h1 class="entry-title">越分享越牛逼</h1>
+      <h1 class="entry-title">iOS监听H5页面goBack返回事件问题</h1>
     
     
       <p class="meta">
@@ -93,7 +93,7 @@
   
 
 
-<time datetime="2016-07-23T14:39:43+08:00" pubdate data-updated="true"></time>
+<time datetime="2016-07-23T18:30:57+08:00" pubdate data-updated="true"></time>
         
          | <a href="#disqus_thread">Comments</a>
         
@@ -102,9 +102,63 @@
   </header>
 
 
-<div class="entry-content"><p>  我是voidxin，一名正在探索的iOS程序员，从此我就入住Octopress啦，在以后的日子里，我将在这里分享我的工作、生活以及技术。
-  之前一直是在简书上发表一些东西，然后最近一段时间觉得是时候自己开个博客了，于是就有了这个博客。我会把之前在简书上的文章都搬家过来，毕竟那些都是我这么久以来的心血。
-  一路走一路感悟，感悟生活感悟工作，毕业整整一年，工作整整两年。没有成长为大牛，也没进入世界五百强，coding的路上，有彷徨也有希望，我坚持我所坚持的，相信我所相信的，不断学习，不断进步，相信明天会更好。</p>
+<div class="entry-content"><p>从native直接push到一个webView页面，隐藏navigationBar，使用H5的头部为导航栏。此时会出现一个问题，就是push出的这个webview没有了原生的navigationBar，那么在点击H5页面上的返回按钮时怎么pop到之前的页面呢？</p>
+
+<p>  当然，我们可以使用上一遍博客提到的利用webViewjavascriptBridge的第三方来解决，这就需要H5和nativ相配合，如果h5是另一个团队做的，那么解决这么一个简单的问题确实显得有点小题大做。</p>
+
+<p>  所以可以使用一种更简单的方法，利用webView 的delegate方法来控制pop到H5页面还是Native页面。</p>
+
+<p>  由于系统尚且要兼容iOS7，加上还涉及到native向webView写cookie的问题，而WKWebView貌似只支持在iOS8以上使用，在cookie处理和缓存处理方面会有比较大的坑，所以项目中依旧使用的是UIWebView。在webView的代理方法中添加如下代码：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType{
+</span><span class='line'>    if (navigationType==UIWebViewNavigationTypeBackForward) {
+</span><span class='line'>        self.webView.canGoBack?[self.webView goBack]:[self.navigationController popViewControllerAnimated:YES];
+</span><span class='line'>    }
+</span><span class='line'>    return YES;
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>  这样就可以区分返回native还是H5</p>
+
+<p>补充：
+      以上适用整个页面都是H5的页面
+      如果只有navigationBar是原生的，此时应该重写pop事件：如下</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>-(void)navigationBarItemBackImage{
+</span><span class='line'>    UIImage *image=[UIImage imageNamed:@"navigationBack"];
+</span><span class='line'>    if ([PSBTools systemVersion]&gt;=7) {
+</span><span class='line'>        image= [image imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+</span><span class='line'>    }
+</span><span class='line'>    self.navigationItem.leftBarButtonItem=[[UIBarButtonItem alloc]initWithImage:image style:UIBarButtonItemStyleDone target:self action:@selector(goBackAction)];
+</span><span class='line'>}
+</span><span class='line'>-(void)goBackAction{
+</span><span class='line'>    if (self.webView.canGoBack==YES) {
+</span><span class='line'>        [self.webView goBack];
+</span><span class='line'>    }else{
+</span><span class='line'>        [self.navigationController popViewControllerAnimated:YES];
+</span><span class='line'>    }
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
 </div>
 
 
@@ -127,7 +181,7 @@
   
 
 
-<time datetime="2016-07-23T14:39:43+08:00" pubdate data-updated="true"></time>
+<time datetime="2016-07-23T18:30:57+08:00" pubdate data-updated="true"></time>
       
 
 
@@ -135,7 +189,7 @@
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://voidxin.github.io/blog/2016/07/23/yue-fen-xiang-yue-niu-bi/" data-via="" data-counturl="http://voidxin.github.io/blog/2016/07/23/yue-fen-xiang-yue-niu-bi/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://voidxin.github.io/blog/2016/07/23/iosjian-ting-h5ye-mian-gobackfan-hui-shi-jian-wen-ti/" data-via="" data-counturl="http://voidxin.github.io/blog/2016/07/23/iosjian-ting-h5ye-mian-gobackfan-hui-shi-jian-wen-ti/" >Tweet</a>
   
   
   
@@ -144,10 +198,10 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2016/06/14/ios10shang-shou-ti-yan/" title="Previous Post: iOS10上手体验">&laquo; iOS10上手体验</a>
+        <a class="basic-alignment left" href="/blog/2016/07/23/xcodelu-jing-gai-bian-dao-zhi-cocoapodsbao-cuo-de-jie-jue-ban-fa/" title="Previous Post: Xcode路径改变导致CocoaPods报错的解决办法">&laquo; Xcode路径改变导致CocoaPods报错的解决办法</a>
       
       
-        <a class="basic-alignment right" href="/blog/2016/07/23/qi-niu-yun-chu-cun-shi-xian-iosqi-ye-ban-fen-fa/" title="Next Post: 七牛云储存实现iOS企业版分发">七牛云储存实现iOS企业版分发 &raquo;</a>
+        <a class="basic-alignment right" href="/blog/2016/07/23/objective-c-runtimena-xie-shi-er/" title="Next Post: Objective-C runtime那些事儿">Objective-C runtime那些事儿 &raquo;</a>
       
     </p>
   </footer>
@@ -214,8 +268,8 @@
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://voidxin.github.io/blog/2016/07/23/yue-fen-xiang-yue-niu-bi/';
-        var disqus_url = 'http://voidxin.github.io/blog/2016/07/23/yue-fen-xiang-yue-niu-bi/';
+        var disqus_identifier = 'http://voidxin.github.io/blog/2016/07/23/iosjian-ting-h5ye-mian-gobackfan-hui-shi-jian-wen-ti/';
+        var disqus_url = 'http://voidxin.github.io/blog/2016/07/23/iosjian-ting-h5ye-mian-gobackfan-hui-shi-jian-wen-ti/';
         var disqus_script = 'embed.js';
       
     (function () {

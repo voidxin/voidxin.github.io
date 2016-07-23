@@ -1,0 +1,426 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>使用UIActivityViewController实现AirDrop分享 - voidxin'blog</title>
+  <meta name="author" content="voidxin">
+
+  
+  <meta name="description" content="今天闲来无事，无意中看了一篇利用AirDrop实现文件传输的文章，于是动手写了一个很简单的demo。其实就是使用UIActivityViewController。
+具体实现如下： 1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23 &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://voidxin.github.io/blog/2016/07/23/shi-yong-uiactivityviewcontrollershi-xian-airdropfen-xiang/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="voidxin'blog" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<script type="text/javascript">
+ function addBlankTargetForLinks () {
+  $('a[href^="http"]').each(function(){
+         $(this).attr('target', '_blank');
+   });
+ }
+ 
+ $(document).bind('DOMNodeInserted', function(event) {
+  addBlankTargetForLinks();
+ });
+ </script>
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">voidxin'blog</a></h1>
+  
+    <h2>越分享，越牛逼,You right You BB</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:voidxin.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">使用UIActivityViewController实现AirDrop分享</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2016-07-23T18:38:51+08:00" pubdate data-updated="true"></time>
+        
+         | <a href="#disqus_thread">Comments</a>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>今天闲来无事，无意中看了一篇利用AirDrop实现文件传输的文章，于是动手写了一个很简单的demo。其实就是使用UIActivityViewController。
+具体实现如下：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+<span class='line-number'>68</span>
+<span class='line-number'>69</span>
+<span class='line-number'>70</span>
+<span class='line-number'>71</span>
+<span class='line-number'>72</span>
+<span class='line-number'>73</span>
+<span class='line-number'>74</span>
+<span class='line-number'>75</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>#import "DemoViewController.h"
+</span><span class='line'>@interface DemoViewController ()
+</span><span class='line'>@property(nonatomic,strong)UIWebView *webView;
+</span><span class='line'>
+</span><span class='line'>@end
+</span><span class='line'>
+</span><span class='line'>@implementation DemoViewController
+</span><span class='line'>
+</span><span class='line'>- (void)viewDidLoad {
+</span><span class='line'>    [super viewDidLoad];
+</span><span class='line'>    // Do any additional setup after loading the view, typically from a nib.
+</span><span class='line'>    self.view.backgroundColor=[UIColor whiteColor];
+</span><span class='line'>    
+</span><span class='line'>    [self addUI];
+</span><span class='line'>    [self loadDataFile];
+</span><span class='line'>   
+</span><span class='line'>}
+</span><span class='line'>-(void)loadDataFile{
+</span><span class='line'>    NSURL *fileURL=[self returnURLWithFileName:@"demo.png"];
+</span><span class='line'>    [self.webView loadRequest:[NSURLRequest requestWithURL:fileURL]];
+</span><span class='line'>}
+</span><span class='line'>-(void)addUI{
+</span><span class='line'>    //add webView
+</span><span class='line'>    [self.view addSubview:self.webView];
+</span><span class='line'>    //add rightBarItem
+</span><span class='line'>     self.navigationItem.rightBarButtonItem=[[UIBarButtonItem alloc]initWithTitle:@"分享" style:UIBarButtonItemStyleDone target:self action:@selector(sharedAction)];
+</span><span class='line'>}
+</span><span class='line'>- (UIWebView *)webView{
+</span><span class='line'>    if (!_webView) {
+</span><span class='line'>        _webView=[[UIWebView alloc]init];
+</span><span class='line'>        _webView.frame=self.view.bounds;
+</span><span class='line'>    }
+</span><span class='line'>    return _webView;
+</span><span class='line'>}
+</span><span class='line'>#pragma mark -return URL for fileName
+</span><span class='line'>-(NSURL *)returnURLWithFileName:(NSString *)fileName{
+</span><span class='line'>    NSArray *arrs=[fileName componentsSeparatedByString:@"."];
+</span><span class='line'>    NSString *pathStr=[[NSBundle mainBundle] pathForResource:arrs.firstObject ofType:arrs[1]];
+</span><span class='line'>    NSURL *fileURL=[NSURL fileURLWithPath:pathStr];
+</span><span class='line'>    return fileURL;
+</span><span class='line'>    
+</span><span class='line'>    
+</span><span class='line'>}
+</span><span class='line'>
+</span><span class='line'>#pragma mark rightBarItem Action
+</span><span class='line'>-(void)sharedAction{
+</span><span class='line'>    NSLog(@"rightBarItem is clicked");
+</span><span class='line'>    NSURL *fileURL=[self returnURLWithFileName:@"demo.png"];
+</span><span class='line'>    NSArray *urls=@[fileURL];
+</span><span class='line'>    UIActivityViewController *activituVC=[[UIActivityViewController alloc]initWithActivityItems:urls applicationActivities:nil];
+</span><span class='line'>    NSArray *cludeActivitys=@[UIActivityTypePostToFacebook,
+</span><span class='line'>                               UIActivityTypePostToTwitter,
+</span><span class='line'>                               UIActivityTypePostToWeibo,
+</span><span class='line'>                               UIActivityTypePostToVimeo,
+</span><span class='line'>                               UIActivityTypeMessage,
+</span><span class='line'>                               UIActivityTypeMail,
+</span><span class='line'>                               UIActivityTypeCopyToPasteboard,
+</span><span class='line'>                               UIActivityTypePrint,
+</span><span class='line'>                               UIActivityTypeAssignToContact,
+</span><span class='line'>                               UIActivityTypeSaveToCameraRoll,
+</span><span class='line'>                               UIActivityTypeAddToReadingList,
+</span><span class='line'>                               UIActivityTypePostToFlickr,
+</span><span class='line'>                               UIActivityTypePostToTencentWeibo];
+</span><span class='line'>    activituVC.excludedActivityTypes=cludeActivitys;
+</span><span class='line'>
+</span><span class='line'>    [self presentViewController:activituVC animated:YES completion:nil];
+</span><span class='line'>
+</span><span class='line'>}
+</span><span class='line'>
+</span><span class='line'>- (void)didReceiveMemoryWarning {
+</span><span class='line'>    [super didReceiveMemoryWarning];
+</span><span class='line'>    // Dispose of any resources that can be recreated.
+</span><span class='line'>}
+</span><span class='line'>
+</span><span class='line'>@end</span></code></pre></td></tr></table></div></figure>
+
+
+<p>详细的demo可以访问我的github去下载，希望可以一起交流一起进步：
+demo下载地址：<a href="https://github.com/voidxin/AirDropDemoWithZX">https://github.com/voidxin/AirDropDemoWithZX</a></p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">voidxin</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2016-07-23T18:38:51+08:00" pubdate data-updated="true"></time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://voidxin.github.io/blog/2016/07/23/shi-yong-uiactivityviewcontrollershi-xian-airdropfen-xiang/" data-via="" data-counturl="http://voidxin.github.io/blog/2016/07/23/shi-yong-uiactivityviewcontrollershi-xian-airdropfen-xiang/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2016/07/23/mvvmmo-shi-chu-ti-yan-(shi-yong-reactivecocoahuo-qu-wang-luo-shu-ju/" title="Previous Post: MVVM模式初体验（使用ReactiveCocoa获取网络数据)">&laquo; MVVM模式初体验（使用ReactiveCocoa获取网络数据)</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2016/07/23/iosshang-chuan-tu-pian-wen-jian-dao-qi-niu-yu-dao-de-na-xie-keng/" title="Next Post: iOS上传图片文件到七牛遇到的那些坑">iOS上传图片文件到七牛遇到的那些坑 &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>最新文章</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2016/07/23/iosli-yong-mqttshi-xian-xiao-xi-ding-yue-he-tui-song/">iOS利用MQTT实现消息订阅和推送</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/07/23/iosshang-chuan-tu-pian-wen-jian-dao-qi-niu-yu-dao-de-na-xie-keng/">iOS上传图片文件到七牛遇到的那些坑</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/07/23/shi-yong-uiactivityviewcontrollershi-xian-airdropfen-xiang/">使用UIActivityViewController实现AirDrop分享</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/07/23/mvvmmo-shi-chu-ti-yan-(shi-yong-reactivecocoahuo-qu-wang-luo-shu-ju/">MVVM模式初体验（使用ReactiveCocoa获取网络数据)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/07/23/objective-c-runtimena-xie-shi-er/">Objective-C runtime那些事儿</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2016 - voidxin -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+  <script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1259974472'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s11.cnzz.com/z_stat.php%3Fid%3D1259974472' type='text/javascript'%3E%3C/script%3E"));</script>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'voidxin';
+      
+        
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://voidxin.github.io/blog/2016/07/23/shi-yong-uiactivityviewcontrollershi-xian-airdropfen-xiang/';
+        var disqus_url = 'http://voidxin.github.io/blog/2016/07/23/shi-yong-uiactivityviewcontrollershi-xian-airdropfen-xiang/';
+        var disqus_script = 'embed.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

@@ -5,11 +5,11 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>越分享越牛逼 - voidxin'blog</title>
+  <title>iOS上传图片文件到七牛遇到的那些坑 - voidxin'blog</title>
   <meta name="author" content="voidxin">
 
   
-  <meta name="description" content="我是voidxin，一名正在探索的iOS程序员，从此我就入住Octopress啦，在以后的日子里，我将在这里分享我的工作、生活以及技术。 之前一直是在简书上发表一些东西，然后最近一段时间觉得是时候自己开个博客了，于是就有了这个博客。我会把之前在简书上的文章都搬家过来， &hellip;">
+  <meta name="description" content="&nbsp; 最近公司的项目涉及到图片的保存，基于大量图片放在本地服务器会给公司增加不小的压力，所以选择了云存储，对比之后选择了七牛。&nbsp; 七牛的官方文档实在是太过于简单，下载SDK之后，根据官方 给的Demo，成功上传了图片。只是token的生成过程有些波折。 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://voidxin.github.io/blog/2016/07/23/yue-fen-xiang-yue-niu-bi/">
+  <link rel="canonical" href="http://voidxin.github.io/blog/2016/07/23/iosshang-chuan-tu-pian-wen-jian-dao-qi-niu-yu-dao-de-na-xie-keng/">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -77,7 +77,7 @@
   
   <header>
     
-      <h1 class="entry-title">越分享越牛逼</h1>
+      <h1 class="entry-title">iOS上传图片文件到七牛遇到的那些坑</h1>
     
     
       <p class="meta">
@@ -93,7 +93,7 @@
   
 
 
-<time datetime="2016-07-23T14:39:43+08:00" pubdate data-updated="true"></time>
+<time datetime="2016-07-23T18:41:37+08:00" pubdate data-updated="true"></time>
         
          | <a href="#disqus_thread">Comments</a>
         
@@ -102,9 +102,8 @@
   </header>
 
 
-<div class="entry-content"><p>  我是voidxin，一名正在探索的iOS程序员，从此我就入住Octopress啦，在以后的日子里，我将在这里分享我的工作、生活以及技术。
-  之前一直是在简书上发表一些东西，然后最近一段时间觉得是时候自己开个博客了，于是就有了这个博客。我会把之前在简书上的文章都搬家过来，毕竟那些都是我这么久以来的心血。
-  一路走一路感悟，感悟生活感悟工作，毕业整整一年，工作整整两年。没有成长为大牛，也没进入世界五百强，coding的路上，有彷徨也有希望，我坚持我所坚持的，相信我所相信的，不断学习，不断进步，相信明天会更好。</p>
+<div class="entry-content"><div style="height: 446px;" class="kalamu-area mousetrap" contenteditable="true"><p>&nbsp; 最近公司的项目涉及到图片的保存，基于大量图片放在本地服务器会给公司增加不小的压力，所以选择了云存储，对比之后选择了七牛。</p><p>&nbsp; 七牛的官方文档实在是太过于简单，下载SDK之后，根据官方 给的Demo，成功上传了图片。只是token的生成过程有些波折。</p><p>由于七牛官方不提倡在客户端生成Token，所以没有给出相应的iOS端生成Token的代码。多方查找资料之后自己写了一个本地生成Token的方法如下：</p><hr><div class="image-package"><img data-original-src="http://upload-images.jianshu.io/upload_images/1376067-ee9efaa908ab54f8.png?imageMogr2/auto-orient/strip" src="http://upload-images.jianshu.io/upload_images/1376067-ee9efaa908ab54f8.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""><br><div class="image-caption"></div></div><hr><p>有了token之后就引入SDK，如下操作即可实现上传：</p><div class="image-package"><img data-original-src="http://upload-images.jianshu.io/upload_images/1376067-0a6a922b43ace871.png?imageMogr2/auto-orient/strip" src="http://upload-images.jianshu.io/upload_images/1376067-0a6a922b43ace871.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""><br><div class="image-caption"></div></div><p>一开始很纳闷，从放回信息中没有找到我们上传成功之后需要的图片的外链接地址，查阅官方文档之后才明白外链接地址需要我们自己拼接。首先，成功之后返回的resp是：</p><p>resp {<br></p><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; hash = "FhweZwfJipE4P0K6Mm_QbC6P0dxW";</p><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; key = zx12;</p><p>}</p><p>如果失败resp为nil，所以图片的外链接地址就是你的 域名/key(返回的key)</p></div>
+
 </div>
 
 
@@ -127,7 +126,7 @@
   
 
 
-<time datetime="2016-07-23T14:39:43+08:00" pubdate data-updated="true"></time>
+<time datetime="2016-07-23T18:41:37+08:00" pubdate data-updated="true"></time>
       
 
 
@@ -135,7 +134,7 @@
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://voidxin.github.io/blog/2016/07/23/yue-fen-xiang-yue-niu-bi/" data-via="" data-counturl="http://voidxin.github.io/blog/2016/07/23/yue-fen-xiang-yue-niu-bi/" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://voidxin.github.io/blog/2016/07/23/iosshang-chuan-tu-pian-wen-jian-dao-qi-niu-yu-dao-de-na-xie-keng/" data-via="" data-counturl="http://voidxin.github.io/blog/2016/07/23/iosshang-chuan-tu-pian-wen-jian-dao-qi-niu-yu-dao-de-na-xie-keng/" >Tweet</a>
   
   
   
@@ -144,10 +143,10 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left" href="/blog/2016/06/14/ios10shang-shou-ti-yan/" title="Previous Post: iOS10上手体验">&laquo; iOS10上手体验</a>
+        <a class="basic-alignment left" href="/blog/2016/07/23/shi-yong-uiactivityviewcontrollershi-xian-airdropfen-xiang/" title="Previous Post: 使用UIActivityViewController实现AirDrop分享">&laquo; 使用UIActivityViewController实现AirDrop分享</a>
       
       
-        <a class="basic-alignment right" href="/blog/2016/07/23/qi-niu-yun-chu-cun-shi-xian-iosqi-ye-ban-fen-fa/" title="Next Post: 七牛云储存实现iOS企业版分发">七牛云储存实现iOS企业版分发 &raquo;</a>
+        <a class="basic-alignment right" href="/blog/2016/07/23/iosli-yong-mqttshi-xian-xiao-xi-ding-yue-he-tui-song/" title="Next Post: iOS利用MQTT实现消息订阅和推送">iOS利用MQTT实现消息订阅和推送 &raquo;</a>
       
     </p>
   </footer>
@@ -214,8 +213,8 @@
       
         
         // var disqus_developer = 1;
-        var disqus_identifier = 'http://voidxin.github.io/blog/2016/07/23/yue-fen-xiang-yue-niu-bi/';
-        var disqus_url = 'http://voidxin.github.io/blog/2016/07/23/yue-fen-xiang-yue-niu-bi/';
+        var disqus_identifier = 'http://voidxin.github.io/blog/2016/07/23/iosshang-chuan-tu-pian-wen-jian-dao-qi-niu-yu-dao-de-na-xie-keng/';
+        var disqus_url = 'http://voidxin.github.io/blog/2016/07/23/iosshang-chuan-tu-pian-wen-jian-dao-qi-niu-yu-dao-de-na-xie-keng/';
         var disqus_script = 'embed.js';
       
     (function () {
