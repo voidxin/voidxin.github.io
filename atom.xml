@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[My Octopress Blog]]></title>
+  <link href="http://voidxin.github.io/atom.xml" rel="self"/>
+  <link href="http://voidxin.github.io/"/>
+  <updated>2016-07-23T14:47:30+08:00</updated>
+  <id>http://voidxin.github.io/</id>
+  <author>
+    <name><![CDATA[Your Name]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[越分享越牛逼]]></title>
+    <link href="http://voidxin.github.io/blog/2016/07/23/yue-fen-xiang-yue-niu-bi/"/>
+    <updated>2016-07-23T14:39:43+08:00</updated>
+    <id>http://voidxin.github.io/blog/2016/07/23/yue-fen-xiang-yue-niu-bi</id>
+    <content type="html"><![CDATA[<p>我是voidxin，一名正在探索的iOS程序员，这是我的第一篇博客，在以后的日子里，我将在这里分享我的工作、生活以及技术。
+越分享，越牛逼，you right，you bb。</p>
+]]></content>
+  </entry>
+  
+</feed>
