@@ -4,7 +4,7 @@
   <title><![CDATA[voidxin'blog]]></title>
   <link href="http://voidxin.github.io/atom.xml" rel="self"/>
   <link href="http://voidxin.github.io/"/>
-  <updated>2016-07-23T18:51:51+08:00</updated>
+  <updated>2016-07-23T19:11:04+08:00</updated>
   <id>http://voidxin.github.io/</id>
   <author>
     <name><![CDATA[voidxin]]></name>
@@ -12,417 +12,6 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
-  
-  <entry>
-    <title type="html"><![CDATA[iOS利用MQTT实现消息订阅和推送]]></title>
-    <link href="http://voidxin.github.io/blog/2016/07/23/iosli-yong-mqttshi-xian-xiao-xi-ding-yue-he-tui-song/"/>
-    <updated>2016-07-23T18:46:03+08:00</updated>
-    <id>http://voidxin.github.io/blog/2016/07/23/iosli-yong-mqttshi-xian-xiao-xi-ding-yue-he-tui-song</id>
-    <content type="html"><![CDATA[<div style="height: 446px;" class="kalamu-area mousetrap" contenteditable="true"><p>&nbsp; 消息推送其实就是在客户端维护一个长连接，而MQTT是一种轻量级低消耗的长连接方式，相比于普通的socket链接来说，它对服务器的消耗没有那么大。其原理大致如下：</p><p>&nbsp; 服务器，服务器给客户端一个心跳应答，这样就形成客户端服务器的一次完整的握手，这个握手是让双方都知道他们之间的连接是没有断开，客户端是在线的。如果超过一个时间的阈值，客户端没有收到服务器的应答，或者服务器没有收到客户端的心跳，那么对客户端来说则断开与服务器的连接重新建立一。</p><p>&nbsp; 在iOS端实现MQTT推送如下：</p><p>&nbsp;&nbsp;&nbsp; 推送：</p><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 首先判断服务器是否启动成功：</p><p><br></p><div class="image-package"><img data-original-src="http://upload-images.jianshu.io/upload_images/1376067-fb26dfa6645220f6.png?imageMogr2/auto-orient/strip" src="http://upload-images.jianshu.io/upload_images/1376067-fb26dfa6645220f6.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""><br><div class="image-caption"></div></div><p>&nbsp;&nbsp;&nbsp; 推送内容：</p><p><br></p><div class="image-package"><img data-original-src="http://upload-images.jianshu.io/upload_images/1376067-b1ce54c31490ed37.png?imageMogr2/auto-orient/strip" src="http://upload-images.jianshu.io/upload_images/1376067-b1ce54c31490ed37.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""><br><div class="image-caption"></div></div><br><p><br></p><p>&nbsp; 订阅主题：</p><p><br></p><div class="image-package"><img data-original-src="http://upload-images.jianshu.io/upload_images/1376067-0aafa491237342fe.png?imageMogr2/auto-orient/strip" src="http://upload-images.jianshu.io/upload_images/1376067-0aafa491237342fe.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""><br><div class="image-caption"></div></div><p>最后释放连接:</p><div class="image-package"><img data-original-src="http://upload-images.jianshu.io/upload_images/1376067-dfec0b5951951043.png?imageMogr2/auto-orient/strip" src="http://upload-images.jianshu.io/upload_images/1376067-dfec0b5951951043.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""><br><div class="image-caption"></div></div><br></div>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[iOS上传图片文件到七牛遇到的那些坑]]></title>
-    <link href="http://voidxin.github.io/blog/2016/07/23/iosshang-chuan-tu-pian-wen-jian-dao-qi-niu-yu-dao-de-na-xie-keng/"/>
-    <updated>2016-07-23T18:41:37+08:00</updated>
-    <id>http://voidxin.github.io/blog/2016/07/23/iosshang-chuan-tu-pian-wen-jian-dao-qi-niu-yu-dao-de-na-xie-keng</id>
-    <content type="html"><![CDATA[<div style="height: 446px;" class="kalamu-area mousetrap" contenteditable="true"><p>&nbsp; 最近公司的项目涉及到图片的保存，基于大量图片放在本地服务器会给公司增加不小的压力，所以选择了云存储，对比之后选择了七牛。</p><p>&nbsp; 七牛的官方文档实在是太过于简单，下载SDK之后，根据官方 给的Demo，成功上传了图片。只是token的生成过程有些波折。</p><p>由于七牛官方不提倡在客户端生成Token，所以没有给出相应的iOS端生成Token的代码。多方查找资料之后自己写了一个本地生成Token的方法如下：</p><hr><div class="image-package"><img data-original-src="http://upload-images.jianshu.io/upload_images/1376067-ee9efaa908ab54f8.png?imageMogr2/auto-orient/strip" src="http://upload-images.jianshu.io/upload_images/1376067-ee9efaa908ab54f8.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""><br><div class="image-caption"></div></div><hr><p>有了token之后就引入SDK，如下操作即可实现上传：</p><div class="image-package"><img data-original-src="http://upload-images.jianshu.io/upload_images/1376067-0a6a922b43ace871.png?imageMogr2/auto-orient/strip" src="http://upload-images.jianshu.io/upload_images/1376067-0a6a922b43ace871.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt=""><br><div class="image-caption"></div></div><p>一开始很纳闷，从放回信息中没有找到我们上传成功之后需要的图片的外链接地址，查阅官方文档之后才明白外链接地址需要我们自己拼接。首先，成功之后返回的resp是：</p><p>resp {<br></p><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; hash = "FhweZwfJipE4P0K6Mm_QbC6P0dxW";</p><p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; key = zx12;</p><p>}</p><p>如果失败resp为nil，所以图片的外链接地址就是你的 域名/key(返回的key)</p></div>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[使用UIActivityViewController实现AirDrop分享]]></title>
-    <link href="http://voidxin.github.io/blog/2016/07/23/shi-yong-uiactivityviewcontrollershi-xian-airdropfen-xiang/"/>
-    <updated>2016-07-23T18:38:51+08:00</updated>
-    <id>http://voidxin.github.io/blog/2016/07/23/shi-yong-uiactivityviewcontrollershi-xian-airdropfen-xiang</id>
-    <content type="html"><![CDATA[<p>今天闲来无事，无意中看了一篇利用AirDrop实现文件传输的文章，于是动手写了一个很简单的demo。其实就是使用UIActivityViewController。
-具体实现如下：</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-<span class='line-number'>44</span>
-<span class='line-number'>45</span>
-<span class='line-number'>46</span>
-<span class='line-number'>47</span>
-<span class='line-number'>48</span>
-<span class='line-number'>49</span>
-<span class='line-number'>50</span>
-<span class='line-number'>51</span>
-<span class='line-number'>52</span>
-<span class='line-number'>53</span>
-<span class='line-number'>54</span>
-<span class='line-number'>55</span>
-<span class='line-number'>56</span>
-<span class='line-number'>57</span>
-<span class='line-number'>58</span>
-<span class='line-number'>59</span>
-<span class='line-number'>60</span>
-<span class='line-number'>61</span>
-<span class='line-number'>62</span>
-<span class='line-number'>63</span>
-<span class='line-number'>64</span>
-<span class='line-number'>65</span>
-<span class='line-number'>66</span>
-<span class='line-number'>67</span>
-<span class='line-number'>68</span>
-<span class='line-number'>69</span>
-<span class='line-number'>70</span>
-<span class='line-number'>71</span>
-<span class='line-number'>72</span>
-<span class='line-number'>73</span>
-<span class='line-number'>74</span>
-<span class='line-number'>75</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>#import "DemoViewController.h"
-</span><span class='line'>@interface DemoViewController ()
-</span><span class='line'>@property(nonatomic,strong)UIWebView *webView;
-</span><span class='line'>
-</span><span class='line'>@end
-</span><span class='line'>
-</span><span class='line'>@implementation DemoViewController
-</span><span class='line'>
-</span><span class='line'>- (void)viewDidLoad {
-</span><span class='line'>    [super viewDidLoad];
-</span><span class='line'>    // Do any additional setup after loading the view, typically from a nib.
-</span><span class='line'>    self.view.backgroundColor=[UIColor whiteColor];
-</span><span class='line'>    
-</span><span class='line'>    [self addUI];
-</span><span class='line'>    [self loadDataFile];
-</span><span class='line'>   
-</span><span class='line'>}
-</span><span class='line'>-(void)loadDataFile{
-</span><span class='line'>    NSURL *fileURL=[self returnURLWithFileName:@"demo.png"];
-</span><span class='line'>    [self.webView loadRequest:[NSURLRequest requestWithURL:fileURL]];
-</span><span class='line'>}
-</span><span class='line'>-(void)addUI{
-</span><span class='line'>    //add webView
-</span><span class='line'>    [self.view addSubview:self.webView];
-</span><span class='line'>    //add rightBarItem
-</span><span class='line'>     self.navigationItem.rightBarButtonItem=[[UIBarButtonItem alloc]initWithTitle:@"分享" style:UIBarButtonItemStyleDone target:self action:@selector(sharedAction)];
-</span><span class='line'>}
-</span><span class='line'>- (UIWebView *)webView{
-</span><span class='line'>    if (!_webView) {
-</span><span class='line'>        _webView=[[UIWebView alloc]init];
-</span><span class='line'>        _webView.frame=self.view.bounds;
-</span><span class='line'>    }
-</span><span class='line'>    return _webView;
-</span><span class='line'>}
-</span><span class='line'>#pragma mark -return URL for fileName
-</span><span class='line'>-(NSURL *)returnURLWithFileName:(NSString *)fileName{
-</span><span class='line'>    NSArray *arrs=[fileName componentsSeparatedByString:@"."];
-</span><span class='line'>    NSString *pathStr=[[NSBundle mainBundle] pathForResource:arrs.firstObject ofType:arrs[1]];
-</span><span class='line'>    NSURL *fileURL=[NSURL fileURLWithPath:pathStr];
-</span><span class='line'>    return fileURL;
-</span><span class='line'>    
-</span><span class='line'>    
-</span><span class='line'>}
-</span><span class='line'>
-</span><span class='line'>#pragma mark rightBarItem Action
-</span><span class='line'>-(void)sharedAction{
-</span><span class='line'>    NSLog(@"rightBarItem is clicked");
-</span><span class='line'>    NSURL *fileURL=[self returnURLWithFileName:@"demo.png"];
-</span><span class='line'>    NSArray *urls=@[fileURL];
-</span><span class='line'>    UIActivityViewController *activituVC=[[UIActivityViewController alloc]initWithActivityItems:urls applicationActivities:nil];
-</span><span class='line'>    NSArray *cludeActivitys=@[UIActivityTypePostToFacebook,
-</span><span class='line'>                               UIActivityTypePostToTwitter,
-</span><span class='line'>                               UIActivityTypePostToWeibo,
-</span><span class='line'>                               UIActivityTypePostToVimeo,
-</span><span class='line'>                               UIActivityTypeMessage,
-</span><span class='line'>                               UIActivityTypeMail,
-</span><span class='line'>                               UIActivityTypeCopyToPasteboard,
-</span><span class='line'>                               UIActivityTypePrint,
-</span><span class='line'>                               UIActivityTypeAssignToContact,
-</span><span class='line'>                               UIActivityTypeSaveToCameraRoll,
-</span><span class='line'>                               UIActivityTypeAddToReadingList,
-</span><span class='line'>                               UIActivityTypePostToFlickr,
-</span><span class='line'>                               UIActivityTypePostToTencentWeibo];
-</span><span class='line'>    activituVC.excludedActivityTypes=cludeActivitys;
-</span><span class='line'>
-</span><span class='line'>    [self presentViewController:activituVC animated:YES completion:nil];
-</span><span class='line'>
-</span><span class='line'>}
-</span><span class='line'>
-</span><span class='line'>- (void)didReceiveMemoryWarning {
-</span><span class='line'>    [super didReceiveMemoryWarning];
-</span><span class='line'>    // Dispose of any resources that can be recreated.
-</span><span class='line'>}
-</span><span class='line'>
-</span><span class='line'>@end</span></code></pre></td></tr></table></div></figure>
-
-
-<p>详细的demo可以访问我的github去下载，希望可以一起交流一起进步：
-demo下载地址：<a href="https://github.com/voidxin/AirDropDemoWithZX">https://github.com/voidxin/AirDropDemoWithZX</a></p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[MVVM模式初体验（使用ReactiveCocoa获取网络数据)]]></title>
-    <link href="http://voidxin.github.io/blog/2016/07/23/mvvmmo-shi-chu-ti-yan-(shi-yong-reactivecocoahuo-qu-wang-luo-shu-ju/"/>
-    <updated>2016-07-23T18:36:46+08:00</updated>
-    <id>http://voidxin.github.io/blog/2016/07/23/mvvmmo-shi-chu-ti-yan-(shi-yong-reactivecocoahuo-qu-wang-luo-shu-ju</id>
-    <content type="html"><![CDATA[<p>使用RAC也有一段时间了，由于此前的项目都是使用的MVC模式，网络请求都封装在固定的模块中，抽取出来十分不方便，所以到目前为止并没有涉及到使用RAC去做获取网络请求的情景。</p>
-
-<p>  近期，着手重构目前手上的项目，准备给臃肿的Controller瘦身，MVVM貌似是一个不错的选择（既然使用了RAC，那为什么不使用MVVM呢?)。于是，开始上手体验MVVM模式和RAC的结合使用（RAC的基础知识在这就不介绍了，百度一下，一大推老司机都有分享）。不用不知道，一用才发现RAC和MVVM简直是绝配啊，那体验真是改变了我对编程的传统观念（函数响应式编程真心好用）。</p>
-
-<p>  这里用一个小demo来举例：</p>
-
-<p>  进入页面加载数据显示。这里使用我当前项目中的一个接口来模拟数据。既然是MVVM，那Model和ViewModel肯定是少不了的。如下：我们新建一个ViewModel叫LoadStoreViewModel(因为这里是加载商店数据),传统的MVC模式中，网络请求都是在ViewController中完成的，这里我们把网络请求封装到对应的ViewModel中去，能够有效的减少ViewController的负担，降低耦合性。</p>
-
-<p>  LoadStoreViewModel主要有三个属性：statues(网络加载状态），code1（编号），以及保存数据的数组dataArry，还有一个加载数据信号loadDataSignal；</p>
-
-<p> 初始化loadDataSignal：(主要进行网络请求）</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>//
-</span><span class='line'>- (RACSignal *)loadDataSignal{
-</span><span class='line'>    if (_loadDataSignal==nil) {
-</span><span class='line'>        AFHTTPRequestOperationManager *manager=[AFHTTPRequestOperationManager manager];
-</span><span class='line'>        manager.requestSerializer=[[AFJSONRequestSerializer alloc]init];
-</span><span class='line'>        NSDictionary *params=@{@"code1":@"MWG08A09"};
-</span><span class='line'>        _loadDataSignal=[manager rac_GET:kLoadURL parameters:params];
-</span><span class='line'>    }
-</span><span class='line'>    return _loadDataSignal;
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
-
-
-<p>调用loadDataSignal处理网络请求结果：</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>
-</span><span class='line'>-(void)initWithSubscrible{
-</span><span class='line'>    [[self.loadDataSignal deliverOn:[RACScheduler mainThreadScheduler]] subscribeNext:^(RACTuple *jsonDataResult) {
-</span><span class='line'>        //请求成功，加载数据
-</span><span class='line'>        NSDictionary *tuple=[jsonDataResult objectAtIndex:0];
-</span><span class='line'>        NSArray *resultList=tuple[@"resultList"];
-</span><span class='line'>        if (resultList.count&gt;0) {
-</span><span class='line'>            self.dataArray=[[[resultList.rac_sequence
-</span><span class='line'>                              map:^id(NSDictionary *dataSource) {
-</span><span class='line'>                              NSDictionary *dic=[(NSDictionary *)dataSource mutableCopy];
-</span><span class='line'>                                  WGStoreModel *model=[WGStoreModel mj_objectWithKeyValues:dic];
-</span><span class='line'>                                  return model;
-</span><span class='line'>                            }] array] mutableCopy];
-</span><span class='line'>        }
-</span><span class='line'>    }];
-</span><span class='line'>    
-</span><span class='line'>    //请求失败
-</span><span class='line'>    [self.loadDataSignal subscribeError:^(NSError *error) {
-</span><span class='line'>       self.statues=@"没有网络，哈哈";
-</span><span class='line'>    }];
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
-
-
-<p>ViewModel的操作完成，接下来要在Controller中绑定ViewModel
-绑定ViewModel，初始化，然后监听ViewModel中的网络请求状态，获得ViewMode中网络请求结果，在Controller中给出相应的提示，数据加载成功，显示数据刷新控件：</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>-(void)bindViewModel{
-</span><span class='line'>    @weakify(self);
-</span><span class='line'>    self.storeViewModel=[[LoadStoreViewModel alloc]init];
-</span><span class='line'>    self.isLoading=YES;
-</span><span class='line'>    self.code1=kCode1;
-</span><span class='line'>    RAC(self.storeViewModel,code1)=RACObserve(self, code1);
-</span><span class='line'>    
-</span><span class='line'>    //加载状态
-</span><span class='line'>   [RACObserve(self, isLoading) subscribeNext:^(id x) {
-</span><span class='line'>        UIApplication.sharedApplication.networkActivityIndicatorVisible = [x boolValue];
-</span><span class='line'>   }];
-</span><span class='line'>    
-</span><span class='line'>    //加载网络数据成功
-</span><span class='line'>    [[[RACObserve(self.storeViewModel, dataArray) ignore:nil] doNext:^(id x) {
-</span><span class='line'>        self.isLoading=YES;
-</span><span class='line'>    }] subscribeNext:^(id x) {
-</span><span class='line'>        @strongify(self);
-</span><span class='line'>        self.isLoading=NO;
-</span><span class='line'>        //刷新控件--
-</span><span class='line'>        [self.tableView reloadData];
-</span><span class='line'>    }];
-</span><span class='line'>    
-</span><span class='line'>    //加载网络数据失败
-</span><span class='line'>    [[RACObserve(self.storeViewModel, statues) filter:^BOOL(id value) {
-</span><span class='line'>        //filter是过滤
-</span><span class='line'>        return value !=nil;
-</span><span class='line'>    }] subscribeNext:^(NSString *str) {
-</span><span class='line'>        UIAlertView *alertView=[[UIAlertView alloc]initWithTitle:@"提示" message:str delegate:self cancelButtonTitle:@"confirm" otherButtonTitles:nil, nil];
-</span><span class='line'>        [alertView show];
-</span><span class='line'>    }];
-</span><span class='line'>    
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
-
-
-<p>ViewController中初始化TableView；</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>- (UITableView *)tableView{
-</span><span class='line'>    if (!_tableView) {
-</span><span class='line'>        _tableView=[[UITableView alloc]initWithFrame:CGRectZero style:UITableViewStylePlain];
-</span><span class='line'>        _tableView.delegate=self;
-</span><span class='line'>        _tableView.dataSource=self;
-</span><span class='line'>        _tableView.showsVerticalScrollIndicator=NO;
-</span><span class='line'>        _tableView.rowHeight=49;
-</span><span class='line'>    }
-</span><span class='line'>    return _tableView;
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
-
-
-<p>tableView的数据源和协议方法实现</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>#pragma mark -tableView DataSource
-</span><span class='line'>- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
-</span><span class='line'>    return 1;
-</span><span class='line'>}
-</span><span class='line'>
-</span><span class='line'>-(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
-</span><span class='line'>    return [self.storeViewModel.dataArray count];
-</span><span class='line'>}
-</span><span class='line'>-(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
-</span><span class='line'>    static NSString *indefier=@"CELL";
-</span><span class='line'>    UITableViewCell *cell=[tableView dequeueReusableCellWithIdentifier:indefier];
-</span><span class='line'>    if (!cell) {
-</span><span class='line'>        cell=[[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:indefier];;
-</span><span class='line'>    }
-</span><span class='line'>    WGStoreModel *model=self.storeViewModel.dataArray[indexPath.row];
-</span><span class='line'>    cell.textLabel.text=model.shopName;
-</span><span class='line'>    
-</span><span class='line'>    return cell;
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
-
-
-<p>无demo不文章，为了更好的理解本篇文章，请到我的github下载对应的demo，一运行探究竟(<a href="https://github.com/voidxin/ReactiveCocoaRequestData">https://github.com/voidxin/ReactiveCocoaRequestData</a>)</p>
-
-<p>谢谢。</p>
-]]></content>
-  </entry>
   
   <entry>
     <title type="html"><![CDATA[Objective-C runtime那些事儿]]></title>
@@ -675,17 +264,56 @@ demo下载地址：<a href="https://github.com/voidxin/AirDropDemoWithZX">https:
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[iOS监听H5页面goBack返回事件问题]]></title>
-    <link href="http://voidxin.github.io/blog/2016/07/23/iosjian-ting-h5ye-mian-gobackfan-hui-shi-jian-wen-ti/"/>
-    <updated>2016-07-23T18:30:57+08:00</updated>
-    <id>http://voidxin.github.io/blog/2016/07/23/iosjian-ting-h5ye-mian-gobackfan-hui-shi-jian-wen-ti</id>
-    <content type="html"><![CDATA[<p>从native直接push到一个webView页面，隐藏navigationBar，使用H5的头部为导航栏。此时会出现一个问题，就是push出的这个webview没有了原生的navigationBar，那么在点击H5页面上的返回按钮时怎么pop到之前的页面呢？</p>
+    <title type="html"><![CDATA[七牛云储存实现iOS企业版分发]]></title>
+    <link href="http://voidxin.github.io/blog/2016/07/23/qi-niu-yun-chu-cun-shi-xian-iosqi-ye-ban-fen-fa/"/>
+    <updated>2016-07-23T17:39:18+08:00</updated>
+    <id>http://voidxin.github.io/blog/2016/07/23/qi-niu-yun-chu-cun-shi-xian-iosqi-ye-ban-fen-fa</id>
+    <content type="html"><![CDATA[<p>iOS企业证书的发版这里就不多说了。
+由于app现在放在公司自己的服务器中，为了实现https的plist下载链接还特意把plist挂在了开源中国上。小公司，带宽小，多用户升级的时候给公司服务器带来不小的压力。所以最近工头有把ipa挂在七牛上去的想法，这样就可以有效的缓解服务器的压力。
+企业版分发的plist下载链接必须是https协议的，所以需要SSL证书。如果你公司没有证书，那么可以使用七牛。
+接下来开始步骤：</p>
 
-<p>  当然，我们可以使用上一遍博客提到的利用webViewjavascriptBridge的第三方来解决，这就需要H5和nativ相配合，如果h5是另一个团队做的，那么解决这么一个简单的问题确实显得有点小题大做。</p>
+<p>1：使用xcode打包生成ipa文件（过程不多说）</p>
 
-<p>  所以可以使用一种更简单的方法，利用webView 的delegate方法来控制pop到H5页面还是Native页面。</p>
+<p>2：登陆七牛（默认你已有账号，没账号请注册）</p>
 
-<p>  由于系统尚且要兼容iOS7，加上还涉及到native向webView写cookie的问题，而WKWebView貌似只支持在iOS8以上使用，在cookie处理和缓存处理方面会有比较大的坑，所以项目中依旧使用的是UIWebView。在webView的代理方法中添加如下代码：</p>
+<p>3：登陆之后添加资源：</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/1376067-5594fd1b12180d34.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="添加资源.png" /></p>
+
+<p>4：创建空间：</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/1376067-8010026c145506ad.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="创建空间.png" /></p>
+
+<p>5：创建成功之后在资源列表中你可以看到你新创建的资源:</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/1376067-9ca45a61ed93db17.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="资源列表.png" /></p>
+
+<p>6：选中你新创建的资源名称，然后选中内容管理&ndash;>上传文件（这里先上传ipa文件）：</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/1376067-97f55b29c96e1248.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="上传文件.png" /></p>
+
+<p>7：上传ipa文件成功之后查看文件的外链接，如图：（你看到的链接可能并不是https的而是http的，这里后面再说明)</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/1376067-3c5f566747757dc8.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="外链接.png" /></p>
+
+<p>8:复制ipa文件的外链，接下来就是要上传plist文件了，首先创建plist文件：</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/1376067-5bfe42bb1f36c8db.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="plist文件内容.png" /></p>
+
+<p>在plist文件的url中填写你复制的ipa的外链。其他的只需填写bundle-identifier为你的项目的id即可，title中填写你app的名称，其他的可不变。然后保存plist文件。</p>
+
+<p>9：接下来就是上传plist文件到七牛了，同ipa文件的上传一样，上传成功后点击外链接即可查看外链：
+<img src="http://upload-images.jianshu.io/upload_images/1376067-688cc663867c7d9b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="plist.png" /></p>
+
+<p>10：接下来是最重要的一步，因为你会发现你上传的plist文件的外链接并不是https的，而企业版分发的plist下载链接必须是https。所以别急.先在查看内容中保存默认域名，然后选中你创建的空间名称，你会看到页面上有个“融合CDN加速域名”的title，点击添加HTTPS域名：</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/1376067-19716f4069399085.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="点击保存域名.png" /></p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/1376067-2b5be6d164e1219c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="https域名.png" /></p>
+
+<p>好了，此时你再去内容管理中，点击你之前上传的plist文件查看它的外链接，你会发现它已经是https的了。
+ok，https链接的plist文件已生成，复制链接，在代码中：</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -693,19 +321,26 @@ demo下载地址：<a href="https://github.com/voidxin/AirDropDemoWithZX">https:
 <span class='line-number'>4</span>
 <span class='line-number'>5</span>
 <span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType{
-</span><span class='line'>    if (navigationType==UIWebViewNavigationTypeBackForward) {
-</span><span class='line'>        self.webView.canGoBack?[self.webView goBack]:[self.navigationController popViewControllerAnimated:YES];
-</span><span class='line'>    }
-</span><span class='line'>    return YES;
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+</pre></td><td class='code'><pre><code class=''><span class='line'>#warning 测试代码
+</span><span class='line'>    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+</span><span class='line'>        UIApplication *application = [UIApplication sharedApplication];
+</span><span class='line'>        [application openURL:[NSURL URLWithString:[NSString stringWithFormat:@"itms-services://?action=download-manifest&url=https://你的plist外链接地址.plist"]]];
+</span><span class='line'>        exit(0);
+</span><span class='line'>    });</span></code></pre></td></tr></table></div></figure>
 
 
-<p>  这样就可以区分返回native还是H5</p>
+<p>就可以升级了。</p>
 
-<p>补充：
-      以上适用整个页面都是H5的页面
-      如果只有navigationBar是原生的，此时应该重写pop事件：如下</p>
+<p>有时你会发现，在你要升级版本的时候，你虽然更换了ipa文件，但是plist文件地址所对应的url的升级包并没有变，或者你连plist文件中的url也更新重新上传，但是你再次打开plist的外链你会发现plist的内容并没有修改。为此我忙活了半天不知道为什么。后来才知道这是由于七牛缓存的原因，所以你每次要发版的时候，在你上传完ipa文件的时候，最后能去刷新一下plist文件和ipa文件，在个人看板中：</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/1376067-7dcc8f44efc0ed89.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="个人中心.png" /></p>
+
+<p>有个刷新预取得功能，复制ipa的链接或plist的外链到那里即可刷新（刷新是有次数限制的）：</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/1376067-8af27c4f8b3a6146.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="刷新预取.png" /></p>
+
+<p>恩，刷新完时候你就可以愉快的升级了。（缓存很啃爹，请慢慢摸索）。
+最后奉上plist文件的源码：</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -721,29 +356,114 @@ demo下载地址：<a href="https://github.com/voidxin/AirDropDemoWithZX">https:
 <span class='line-number'>12</span>
 <span class='line-number'>13</span>
 <span class='line-number'>14</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>-(void)navigationBarItemBackImage{
-</span><span class='line'>    UIImage *image=[UIImage imageNamed:@"navigationBack"];
-</span><span class='line'>    if ([PSBTools systemVersion]&gt;=7) {
-</span><span class='line'>        image= [image imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
-</span><span class='line'>    }
-</span><span class='line'>    self.navigationItem.leftBarButtonItem=[[UIBarButtonItem alloc]initWithImage:image style:UIBarButtonItemStyleDone target:self action:@selector(goBackAction)];
-</span><span class='line'>}
-</span><span class='line'>-(void)goBackAction{
-</span><span class='line'>    if (self.webView.canGoBack==YES) {
-</span><span class='line'>        [self.webView goBack];
-</span><span class='line'>    }else{
-</span><span class='line'>        [self.navigationController popViewControllerAnimated:YES];
-</span><span class='line'>    }
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+<span class='line-number'>45</span>
+<span class='line-number'>46</span>
+<span class='line-number'>47</span>
+<span class='line-number'>48</span>
+<span class='line-number'>49</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+</span><span class='line'>&lt;!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd"&gt;
+</span><span class='line'>&lt;plist version="1.0"&gt;
+</span><span class='line'>&lt;dict&gt;
+</span><span class='line'>  &lt;key&gt;items&lt;/key&gt;
+</span><span class='line'>  &lt;array&gt;
+</span><span class='line'>      &lt;dict&gt;
+</span><span class='line'>          &lt;key&gt;assets&lt;/key&gt;
+</span><span class='line'>          &lt;array&gt;
+</span><span class='line'>              &lt;dict&gt;
+</span><span class='line'>                  &lt;key&gt;kind&lt;/key&gt;
+</span><span class='line'>                  &lt;string&gt;software-package&lt;/string&gt;
+</span><span class='line'>                  &lt;key&gt;url&lt;/key&gt;
+</span><span class='line'>                  &lt;string&gt;ipa文件的外链，这个外链可以不是https的，也就是说http即可&lt;/string&gt;
+</span><span class='line'>              &lt;/dict&gt;
+</span><span class='line'>              &lt;dict&gt;
+</span><span class='line'>                  &lt;key&gt;kind&lt;/key&gt;
+</span><span class='line'>                  &lt;string&gt;full-size-image&lt;/string&gt;
+</span><span class='line'>                  &lt;key&gt;needs-shine&lt;/key&gt;
+</span><span class='line'>                  &lt;true/&gt;
+</span><span class='line'>                  &lt;key&gt;url&lt;/key&gt;
+</span><span class='line'>                  &lt;string&gt;&lt;/string&gt;
+</span><span class='line'>              &lt;/dict&gt;
+</span><span class='line'>              &lt;dict&gt;
+</span><span class='line'>                  &lt;key&gt;kind&lt;/key&gt;
+</span><span class='line'>                  &lt;string&gt;display-image&lt;/string&gt;
+</span><span class='line'>                  &lt;key&gt;needs-shine&lt;/key&gt;
+</span><span class='line'>                  &lt;true/&gt;
+</span><span class='line'>                  &lt;key&gt;url&lt;/key&gt;
+</span><span class='line'>                  &lt;string&gt;&lt;/string&gt;
+</span><span class='line'>              &lt;/dict&gt;
+</span><span class='line'>          &lt;/array&gt;
+</span><span class='line'>          &lt;key&gt;metadata&lt;/key&gt;
+</span><span class='line'>          &lt;dict&gt;
+</span><span class='line'>              &lt;key&gt;bundle-identifier&lt;/key&gt;
+</span><span class='line'>              &lt;string&gt;你的bundleID&lt;/string&gt;
+</span><span class='line'>              &lt;key&gt;bundle-version&lt;/key&gt;
+</span><span class='line'>              &lt;string&gt;1.2.0&lt;/string&gt;
+</span><span class='line'>              &lt;key&gt;kind&lt;/key&gt;
+</span><span class='line'>              &lt;string&gt;software&lt;/string&gt;
+</span><span class='line'>              &lt;key&gt;subtitle&lt;/key&gt;
+</span><span class='line'>              &lt;string&gt;App&lt;/string&gt;
+</span><span class='line'>              &lt;key&gt;title&lt;/key&gt;
+</span><span class='line'>              &lt;string&gt;app名称&lt;/string&gt;
+</span><span class='line'>          &lt;/dict&gt;
+</span><span class='line'>      &lt;/dict&gt;
+</span><span class='line'>  &lt;/array&gt;
+</span><span class='line'>&lt;/dict&gt;
+</span><span class='line'>&lt;/plist&gt;</span></code></pre></td></tr></table></div></figure>
 
+
+<p>ok，以上总结有什么不对或瞎扯的地方欢迎在下方留言中指出。</p>
+
+<p>ps：无demo不文章，抱歉，真没有demo。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[越分享越牛逼]]></title>
+    <link href="http://voidxin.github.io/blog/2016/07/23/yue-fen-xiang-yue-niu-bi/"/>
+    <updated>2016-07-23T14:39:43+08:00</updated>
+    <id>http://voidxin.github.io/blog/2016/07/23/yue-fen-xiang-yue-niu-bi</id>
+    <content type="html"><![CDATA[<p>  我是voidxin，一名正在探索的iOS程序员，从此我就入住Octopress啦，在以后的日子里，我将在这里分享我的工作、生活以及技术。
+  之前一直是在简书上发表一些东西，然后最近一段时间觉得是时候自己开个博客了，于是就有了这个博客。我会把之前在简书上的文章都搬家过来，毕竟那些都是我这么久以来的心血。
+  一路走一路感悟，感悟生活感悟工作，毕业整整一年，工作整整两年。没有成长为大牛，也没进入世界五百强，coding的路上，有彷徨也有希望，我坚持我所坚持的，相信我所相信的，不断学习，不断进步，相信明天会更好。</p>
 ]]></content>
   </entry>
   
   <entry>
     <title type="html"><![CDATA[Xcode路径改变导致CocoaPods报错的解决办法]]></title>
-    <link href="http://voidxin.github.io/blog/2016/07/23/xcodelu-jing-gai-bian-dao-zhi-cocoapodsbao-cuo-de-jie-jue-ban-fa/"/>
-    <updated>2016-07-23T18:29:09+08:00</updated>
-    <id>http://voidxin.github.io/blog/2016/07/23/xcodelu-jing-gai-bian-dao-zhi-cocoapodsbao-cuo-de-jie-jue-ban-fa</id>
+    <link href="http://voidxin.github.io/blog/2016/07/22/xcodelu-jing-gai-bian-dao-zhi-cocoapodsbao-cuo-de-jie-jue-ban-fa/"/>
+    <updated>2016-07-22T11:12:09+08:00</updated>
+    <id>http://voidxin.github.io/blog/2016/07/22/xcodelu-jing-gai-bian-dao-zhi-cocoapodsbao-cuo-de-jie-jue-ban-fa</id>
     <content type="html"><![CDATA[<p>这几天心血来潮，更新了下Mac系统，然后装了下Xcode8装逼，接下来就懵逼了。</p>
 
 <p>由于之前的Xcode是7.1的一直没升级，本想体验体验Xcode8的，所以装完Xcode8之后Xcode7.1也没有删掉，一直两个Xcode一起用着，用了几天之后觉得Xcode8挺稳定的，于是就删了Xcode7，故事由此开始了。</p>
@@ -786,9 +506,9 @@ demo下载地址：<a href="https://github.com/voidxin/AirDropDemoWithZX">https:
   
   <entry>
     <title type="html"><![CDATA[JSPatch的使用]]></title>
-    <link href="http://voidxin.github.io/blog/2016/07/23/jspatchde-shi-yong/"/>
-    <updated>2016-07-23T18:26:22+08:00</updated>
-    <id>http://voidxin.github.io/blog/2016/07/23/jspatchde-shi-yong</id>
+    <link href="http://voidxin.github.io/blog/2016/07/16/jspatchde-shi-yong/"/>
+    <updated>2016-07-16T00:18:22+08:00</updated>
+    <id>http://voidxin.github.io/blog/2016/07/16/jspatchde-shi-yong</id>
     <content type="html"><![CDATA[<p>JSpatch的更多用法可以去github上找文档。不多解释。
 先来个简单的demo：</p>
 
@@ -1031,56 +751,21 @@ demo下载地址：<a href="https://github.com/voidxin/AirDropDemoWithZX">https:
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[七牛云储存实现iOS企业版分发]]></title>
-    <link href="http://voidxin.github.io/blog/2016/07/23/qi-niu-yun-chu-cun-shi-xian-iosqi-ye-ban-fen-fa/"/>
-    <updated>2016-07-23T17:39:18+08:00</updated>
-    <id>http://voidxin.github.io/blog/2016/07/23/qi-niu-yun-chu-cun-shi-xian-iosqi-ye-ban-fen-fa</id>
-    <content type="html"><![CDATA[<p>iOS企业证书的发版这里就不多说了。
-由于app现在放在公司自己的服务器中，为了实现https的plist下载链接还特意把plist挂在了开源中国上。小公司，带宽小，多用户升级的时候给公司服务器带来不小的压力。所以最近工头有把ipa挂在七牛上去的想法，这样就可以有效的缓解服务器的压力。
-企业版分发的plist下载链接必须是https协议的，所以需要SSL证书。如果你公司没有证书，那么可以使用七牛。
-接下来开始步骤：</p>
+    <title type="html"><![CDATA[MVVM模式初体验（使用ReactiveCocoa获取网络数据)]]></title>
+    <link href="http://voidxin.github.io/blog/2016/06/15/mvvmmo-shi-chu-ti-yan-(shi-yong-reactivecocoahuo-qu-wang-luo-shu-ju/"/>
+    <updated>2016-06-15T16:06:46+08:00</updated>
+    <id>http://voidxin.github.io/blog/2016/06/15/mvvmmo-shi-chu-ti-yan-(shi-yong-reactivecocoahuo-qu-wang-luo-shu-ju</id>
+    <content type="html"><![CDATA[<p>使用RAC也有一段时间了，由于此前的项目都是使用的MVC模式，网络请求都封装在固定的模块中，抽取出来十分不方便，所以到目前为止并没有涉及到使用RAC去做获取网络请求的情景。</p>
 
-<p>1：使用xcode打包生成ipa文件（过程不多说）</p>
+<p>  近期，着手重构目前手上的项目，准备给臃肿的Controller瘦身，MVVM貌似是一个不错的选择（既然使用了RAC，那为什么不使用MVVM呢?)。于是，开始上手体验MVVM模式和RAC的结合使用（RAC的基础知识在这就不介绍了，百度一下，一大推老司机都有分享）。不用不知道，一用才发现RAC和MVVM简直是绝配啊，那体验真是改变了我对编程的传统观念（函数响应式编程真心好用）。</p>
 
-<p>2：登陆七牛（默认你已有账号，没账号请注册）</p>
+<p>  这里用一个小demo来举例：</p>
 
-<p>3：登陆之后添加资源：</p>
+<p>  进入页面加载数据显示。这里使用我当前项目中的一个接口来模拟数据。既然是MVVM，那Model和ViewModel肯定是少不了的。如下：我们新建一个ViewModel叫LoadStoreViewModel(因为这里是加载商店数据),传统的MVC模式中，网络请求都是在ViewController中完成的，这里我们把网络请求封装到对应的ViewModel中去，能够有效的减少ViewController的负担，降低耦合性。</p>
 
-<p><img src="http://upload-images.jianshu.io/upload_images/1376067-5594fd1b12180d34.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="添加资源.png" /></p>
+<p>  LoadStoreViewModel主要有三个属性：statues(网络加载状态），code1（编号），以及保存数据的数组dataArry，还有一个加载数据信号loadDataSignal；</p>
 
-<p>4：创建空间：</p>
-
-<p><img src="http://upload-images.jianshu.io/upload_images/1376067-8010026c145506ad.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="创建空间.png" /></p>
-
-<p>5：创建成功之后在资源列表中你可以看到你新创建的资源:</p>
-
-<p><img src="http://upload-images.jianshu.io/upload_images/1376067-9ca45a61ed93db17.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="资源列表.png" /></p>
-
-<p>6：选中你新创建的资源名称，然后选中内容管理&ndash;>上传文件（这里先上传ipa文件）：</p>
-
-<p><img src="http://upload-images.jianshu.io/upload_images/1376067-97f55b29c96e1248.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="上传文件.png" /></p>
-
-<p>7：上传ipa文件成功之后查看文件的外链接，如图：（你看到的链接可能并不是https的而是http的，这里后面再说明)</p>
-
-<p><img src="http://upload-images.jianshu.io/upload_images/1376067-3c5f566747757dc8.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="外链接.png" /></p>
-
-<p>8:复制ipa文件的外链，接下来就是要上传plist文件了，首先创建plist文件：</p>
-
-<p><img src="http://upload-images.jianshu.io/upload_images/1376067-5bfe42bb1f36c8db.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="plist文件内容.png" /></p>
-
-<p>在plist文件的url中填写你复制的ipa的外链。其他的只需填写bundle-identifier为你的项目的id即可，title中填写你app的名称，其他的可不变。然后保存plist文件。</p>
-
-<p>9：接下来就是上传plist文件到七牛了，同ipa文件的上传一样，上传成功后点击外链接即可查看外链：
-<img src="http://upload-images.jianshu.io/upload_images/1376067-688cc663867c7d9b.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="plist.png" /></p>
-
-<p>10：接下来是最重要的一步，因为你会发现你上传的plist文件的外链接并不是https的，而企业版分发的plist下载链接必须是https。所以别急.先在查看内容中保存默认域名，然后选中你创建的空间名称，你会看到页面上有个“融合CDN加速域名”的title，点击添加HTTPS域名：</p>
-
-<p><img src="http://upload-images.jianshu.io/upload_images/1376067-19716f4069399085.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="点击保存域名.png" /></p>
-
-<p><img src="http://upload-images.jianshu.io/upload_images/1376067-2b5be6d164e1219c.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="https域名.png" /></p>
-
-<p>好了，此时你再去内容管理中，点击你之前上传的plist文件查看它的外链接，你会发现它已经是https的了。
-ok，https链接的plist文件已生成，复制链接，在代码中：</p>
+<p> 初始化loadDataSignal：(主要进行网络请求）</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -1088,26 +773,242 @@ ok，https链接的plist文件已生成，复制链接，在代码中：</p>
 <span class='line-number'>4</span>
 <span class='line-number'>5</span>
 <span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>#warning 测试代码
-</span><span class='line'>    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-</span><span class='line'>        UIApplication *application = [UIApplication sharedApplication];
-</span><span class='line'>        [application openURL:[NSURL URLWithString:[NSString stringWithFormat:@"itms-services://?action=download-manifest&url=https://你的plist外链接地址.plist"]]];
-</span><span class='line'>        exit(0);
-</span><span class='line'>    });</span></code></pre></td></tr></table></div></figure>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>//
+</span><span class='line'>- (RACSignal *)loadDataSignal{
+</span><span class='line'>    if (_loadDataSignal==nil) {
+</span><span class='line'>        AFHTTPRequestOperationManager *manager=[AFHTTPRequestOperationManager manager];
+</span><span class='line'>        manager.requestSerializer=[[AFJSONRequestSerializer alloc]init];
+</span><span class='line'>        NSDictionary *params=@{@"code1":@"MWG08A09"};
+</span><span class='line'>        _loadDataSignal=[manager rac_GET:kLoadURL parameters:params];
+</span><span class='line'>    }
+</span><span class='line'>    return _loadDataSignal;
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
 
 
-<p>就可以升级了。</p>
+<p>调用loadDataSignal处理网络请求结果：</p>
 
-<p>有时你会发现，在你要升级版本的时候，你虽然更换了ipa文件，但是plist文件地址所对应的url的升级包并没有变，或者你连plist文件中的url也更新重新上传，但是你再次打开plist的外链你会发现plist的内容并没有修改。为此我忙活了半天不知道为什么。后来才知道这是由于七牛缓存的原因，所以你每次要发版的时候，在你上传完ipa文件的时候，最后能去刷新一下plist文件和ipa文件，在个人看板中：</p>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>
+</span><span class='line'>-(void)initWithSubscrible{
+</span><span class='line'>    [[self.loadDataSignal deliverOn:[RACScheduler mainThreadScheduler]] subscribeNext:^(RACTuple *jsonDataResult) {
+</span><span class='line'>        //请求成功，加载数据
+</span><span class='line'>        NSDictionary *tuple=[jsonDataResult objectAtIndex:0];
+</span><span class='line'>        NSArray *resultList=tuple[@"resultList"];
+</span><span class='line'>        if (resultList.count&gt;0) {
+</span><span class='line'>            self.dataArray=[[[resultList.rac_sequence
+</span><span class='line'>                              map:^id(NSDictionary *dataSource) {
+</span><span class='line'>                              NSDictionary *dic=[(NSDictionary *)dataSource mutableCopy];
+</span><span class='line'>                                  WGStoreModel *model=[WGStoreModel mj_objectWithKeyValues:dic];
+</span><span class='line'>                                  return model;
+</span><span class='line'>                            }] array] mutableCopy];
+</span><span class='line'>        }
+</span><span class='line'>    }];
+</span><span class='line'>    
+</span><span class='line'>    //请求失败
+</span><span class='line'>    [self.loadDataSignal subscribeError:^(NSError *error) {
+</span><span class='line'>       self.statues=@"没有网络，哈哈";
+</span><span class='line'>    }];
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
 
-<p><img src="http://upload-images.jianshu.io/upload_images/1376067-7dcc8f44efc0ed89.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="个人中心.png" /></p>
 
-<p>有个刷新预取得功能，复制ipa的链接或plist的外链到那里即可刷新（刷新是有次数限制的）：</p>
+<p>ViewModel的操作完成，接下来要在Controller中绑定ViewModel
+绑定ViewModel，初始化，然后监听ViewModel中的网络请求状态，获得ViewMode中网络请求结果，在Controller中给出相应的提示，数据加载成功，显示数据刷新控件：</p>
 
-<p><img src="http://upload-images.jianshu.io/upload_images/1376067-8af27c4f8b3a6146.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="刷新预取.png" /></p>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>-(void)bindViewModel{
+</span><span class='line'>    @weakify(self);
+</span><span class='line'>    self.storeViewModel=[[LoadStoreViewModel alloc]init];
+</span><span class='line'>    self.isLoading=YES;
+</span><span class='line'>    self.code1=kCode1;
+</span><span class='line'>    RAC(self.storeViewModel,code1)=RACObserve(self, code1);
+</span><span class='line'>    
+</span><span class='line'>    //加载状态
+</span><span class='line'>   [RACObserve(self, isLoading) subscribeNext:^(id x) {
+</span><span class='line'>        UIApplication.sharedApplication.networkActivityIndicatorVisible = [x boolValue];
+</span><span class='line'>   }];
+</span><span class='line'>    
+</span><span class='line'>    //加载网络数据成功
+</span><span class='line'>    [[[RACObserve(self.storeViewModel, dataArray) ignore:nil] doNext:^(id x) {
+</span><span class='line'>        self.isLoading=YES;
+</span><span class='line'>    }] subscribeNext:^(id x) {
+</span><span class='line'>        @strongify(self);
+</span><span class='line'>        self.isLoading=NO;
+</span><span class='line'>        //刷新控件--
+</span><span class='line'>        [self.tableView reloadData];
+</span><span class='line'>    }];
+</span><span class='line'>    
+</span><span class='line'>    //加载网络数据失败
+</span><span class='line'>    [[RACObserve(self.storeViewModel, statues) filter:^BOOL(id value) {
+</span><span class='line'>        //filter是过滤
+</span><span class='line'>        return value !=nil;
+</span><span class='line'>    }] subscribeNext:^(NSString *str) {
+</span><span class='line'>        UIAlertView *alertView=[[UIAlertView alloc]initWithTitle:@"提示" message:str delegate:self cancelButtonTitle:@"confirm" otherButtonTitles:nil, nil];
+</span><span class='line'>        [alertView show];
+</span><span class='line'>    }];
+</span><span class='line'>    
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
 
-<p>恩，刷新完时候你就可以愉快的升级了。（缓存很啃爹，请慢慢摸索）。
-最后奉上plist文件的源码：</p>
+
+<p>ViewController中初始化TableView；</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>- (UITableView *)tableView{
+</span><span class='line'>    if (!_tableView) {
+</span><span class='line'>        _tableView=[[UITableView alloc]initWithFrame:CGRectZero style:UITableViewStylePlain];
+</span><span class='line'>        _tableView.delegate=self;
+</span><span class='line'>        _tableView.dataSource=self;
+</span><span class='line'>        _tableView.showsVerticalScrollIndicator=NO;
+</span><span class='line'>        _tableView.rowHeight=49;
+</span><span class='line'>    }
+</span><span class='line'>    return _tableView;
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>tableView的数据源和协议方法实现</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>#pragma mark -tableView DataSource
+</span><span class='line'>- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
+</span><span class='line'>    return 1;
+</span><span class='line'>}
+</span><span class='line'>
+</span><span class='line'>-(NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
+</span><span class='line'>    return [self.storeViewModel.dataArray count];
+</span><span class='line'>}
+</span><span class='line'>-(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+</span><span class='line'>    static NSString *indefier=@"CELL";
+</span><span class='line'>    UITableViewCell *cell=[tableView dequeueReusableCellWithIdentifier:indefier];
+</span><span class='line'>    if (!cell) {
+</span><span class='line'>        cell=[[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:indefier];;
+</span><span class='line'>    }
+</span><span class='line'>    WGStoreModel *model=self.storeViewModel.dataArray[indexPath.row];
+</span><span class='line'>    cell.textLabel.text=model.shopName;
+</span><span class='line'>    
+</span><span class='line'>    return cell;
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>无demo不文章，为了更好的理解本篇文章，请到我的github下载对应的demo，一运行探究竟(<a href="https://github.com/voidxin/ReactiveCocoaRequestData">https://github.com/voidxin/ReactiveCocoaRequestData</a>)</p>
+
+<p>谢谢。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[iOS10上手体验]]></title>
+    <link href="http://voidxin.github.io/blog/2016/06/14/ios10shang-shou-ti-yan/"/>
+    <updated>2016-06-14T22:49:49+08:00</updated>
+    <id>http://voidxin.github.io/blog/2016/06/14/ios10shang-shou-ti-yan</id>
+    <content type="html"><![CDATA[<p>今天凌晨，苹果2016年开发者技术大会召开。</p>
+
+<p>  熬夜看直播下来，发现并没有什么让人惊喜的东西发布，似乎Macbook air也没有要更新的意思。一句话来概括就是：“本次发布会是软件盛会",更新了4大系统.把OS X改成了叫macOS.</p>
+
+<p>  为了体验最新的iOS10，一上班就开始忙了，首先用开发者账号登陆开发者中心，去下载固件，期待下载完成之后用iTunes安装，无奈，我的5s还是9.3.1的系统，iTunes提示我要先升级到9.3.2，一看安装包还不小，估计得下载好长一段时间。无奈只能换一种方式，那就是通过描述文件来安装.</p>
+
+<p>于是在百度搜了个下载地址（<a href="http://www.99danji.com/news/89498/">http://www.99danji.com/news/89498/</a>  ）用Safari·打开下载即可。下载完成之后重启，重启之后果然出现iOS10安装版本的提示。接下来就是等待下载安装的过程。一路很顺畅（一开始担心5s变白板，看来是多余的担心了 ）。事实证明，5s安装之后比起9.3.1来说会感觉更卡顿。然后就是对于APP软件来说，就目前使用的情况，手机QQ出现的问题较多：</p>
+
+<p> 1:按HOME键退出时，角标被无限放大一闪而过，</p>
+
+<p> 2:消息通知的时候通知总是重复提示（已查看过的消息退出后又马上弹出推送通知）。</p>
+
+<p> 3:qq空间点击文字详情之后崩溃闪退
+微信APP没有出现像手机QQ那样的问题，但是微信在分享链接到朋友圈时会出现闪退的现象。然后，就像开发者大会上说的那样，一些系统软件的确也支持卸载，这里上图：</p>
+
+<p><img src="http://upload-images.jianshu.io/upload_images/1376067-c4727c61e6dbf497.PNG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="IMG_4793.PNG" /></p>
+
+<p>  目前短时间体验下来就这点感受，更多的变化还需细细体验，不过在这里要奉劝5s的用户，如果不想体验没点击一次都零点八秒左右的延迟反应现象的话还是先不要安装iOS10了，等待正式版发布的时候，期待苹果能有优化。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[使用UIActivityViewController实现AirDrop分享]]></title>
+    <link href="http://voidxin.github.io/blog/2016/05/08/shi-yong-uiactivityviewcontrollershi-xian-airdropfen-xiang/"/>
+    <updated>2016-05-08T14:41:51+08:00</updated>
+    <id>http://voidxin.github.io/blog/2016/05/08/shi-yong-uiactivityviewcontrollershi-xian-airdropfen-xiang</id>
+    <content type="html"><![CDATA[<p>今天闲来无事，无意中看了一篇利用AirDrop实现文件传输的文章，于是动手写了一个很简单的demo。其实就是使用UIActivityViewController。
+具体实现如下：</p>
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -1158,97 +1059,234 @@ ok，https链接的plist文件已生成，复制链接，在代码中：</p>
 <span class='line-number'>47</span>
 <span class='line-number'>48</span>
 <span class='line-number'>49</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
-</span><span class='line'>&lt;!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd"&gt;
-</span><span class='line'>&lt;plist version="1.0"&gt;
-</span><span class='line'>&lt;dict&gt;
-</span><span class='line'>  &lt;key&gt;items&lt;/key&gt;
-</span><span class='line'>  &lt;array&gt;
-</span><span class='line'>      &lt;dict&gt;
-</span><span class='line'>          &lt;key&gt;assets&lt;/key&gt;
-</span><span class='line'>          &lt;array&gt;
-</span><span class='line'>              &lt;dict&gt;
-</span><span class='line'>                  &lt;key&gt;kind&lt;/key&gt;
-</span><span class='line'>                  &lt;string&gt;software-package&lt;/string&gt;
-</span><span class='line'>                  &lt;key&gt;url&lt;/key&gt;
-</span><span class='line'>                  &lt;string&gt;ipa文件的外链，这个外链可以不是https的，也就是说http即可&lt;/string&gt;
-</span><span class='line'>              &lt;/dict&gt;
-</span><span class='line'>              &lt;dict&gt;
-</span><span class='line'>                  &lt;key&gt;kind&lt;/key&gt;
-</span><span class='line'>                  &lt;string&gt;full-size-image&lt;/string&gt;
-</span><span class='line'>                  &lt;key&gt;needs-shine&lt;/key&gt;
-</span><span class='line'>                  &lt;true/&gt;
-</span><span class='line'>                  &lt;key&gt;url&lt;/key&gt;
-</span><span class='line'>                  &lt;string&gt;&lt;/string&gt;
-</span><span class='line'>              &lt;/dict&gt;
-</span><span class='line'>              &lt;dict&gt;
-</span><span class='line'>                  &lt;key&gt;kind&lt;/key&gt;
-</span><span class='line'>                  &lt;string&gt;display-image&lt;/string&gt;
-</span><span class='line'>                  &lt;key&gt;needs-shine&lt;/key&gt;
-</span><span class='line'>                  &lt;true/&gt;
-</span><span class='line'>                  &lt;key&gt;url&lt;/key&gt;
-</span><span class='line'>                  &lt;string&gt;&lt;/string&gt;
-</span><span class='line'>              &lt;/dict&gt;
-</span><span class='line'>          &lt;/array&gt;
-</span><span class='line'>          &lt;key&gt;metadata&lt;/key&gt;
-</span><span class='line'>          &lt;dict&gt;
-</span><span class='line'>              &lt;key&gt;bundle-identifier&lt;/key&gt;
-</span><span class='line'>              &lt;string&gt;你的bundleID&lt;/string&gt;
-</span><span class='line'>              &lt;key&gt;bundle-version&lt;/key&gt;
-</span><span class='line'>              &lt;string&gt;1.2.0&lt;/string&gt;
-</span><span class='line'>              &lt;key&gt;kind&lt;/key&gt;
-</span><span class='line'>              &lt;string&gt;software&lt;/string&gt;
-</span><span class='line'>              &lt;key&gt;subtitle&lt;/key&gt;
-</span><span class='line'>              &lt;string&gt;App&lt;/string&gt;
-</span><span class='line'>              &lt;key&gt;title&lt;/key&gt;
-</span><span class='line'>              &lt;string&gt;app名称&lt;/string&gt;
-</span><span class='line'>          &lt;/dict&gt;
-</span><span class='line'>      &lt;/dict&gt;
-</span><span class='line'>  &lt;/array&gt;
-</span><span class='line'>&lt;/dict&gt;
-</span><span class='line'>&lt;/plist&gt;</span></code></pre></td></tr></table></div></figure>
+<span class='line-number'>50</span>
+<span class='line-number'>51</span>
+<span class='line-number'>52</span>
+<span class='line-number'>53</span>
+<span class='line-number'>54</span>
+<span class='line-number'>55</span>
+<span class='line-number'>56</span>
+<span class='line-number'>57</span>
+<span class='line-number'>58</span>
+<span class='line-number'>59</span>
+<span class='line-number'>60</span>
+<span class='line-number'>61</span>
+<span class='line-number'>62</span>
+<span class='line-number'>63</span>
+<span class='line-number'>64</span>
+<span class='line-number'>65</span>
+<span class='line-number'>66</span>
+<span class='line-number'>67</span>
+<span class='line-number'>68</span>
+<span class='line-number'>69</span>
+<span class='line-number'>70</span>
+<span class='line-number'>71</span>
+<span class='line-number'>72</span>
+<span class='line-number'>73</span>
+<span class='line-number'>74</span>
+<span class='line-number'>75</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>#import "DemoViewController.h"
+</span><span class='line'>@interface DemoViewController ()
+</span><span class='line'>@property(nonatomic,strong)UIWebView *webView;
+</span><span class='line'>
+</span><span class='line'>@end
+</span><span class='line'>
+</span><span class='line'>@implementation DemoViewController
+</span><span class='line'>
+</span><span class='line'>- (void)viewDidLoad {
+</span><span class='line'>    [super viewDidLoad];
+</span><span class='line'>    // Do any additional setup after loading the view, typically from a nib.
+</span><span class='line'>    self.view.backgroundColor=[UIColor whiteColor];
+</span><span class='line'>    
+</span><span class='line'>    [self addUI];
+</span><span class='line'>    [self loadDataFile];
+</span><span class='line'>   
+</span><span class='line'>}
+</span><span class='line'>-(void)loadDataFile{
+</span><span class='line'>    NSURL *fileURL=[self returnURLWithFileName:@"demo.png"];
+</span><span class='line'>    [self.webView loadRequest:[NSURLRequest requestWithURL:fileURL]];
+</span><span class='line'>}
+</span><span class='line'>-(void)addUI{
+</span><span class='line'>    //add webView
+</span><span class='line'>    [self.view addSubview:self.webView];
+</span><span class='line'>    //add rightBarItem
+</span><span class='line'>     self.navigationItem.rightBarButtonItem=[[UIBarButtonItem alloc]initWithTitle:@"分享" style:UIBarButtonItemStyleDone target:self action:@selector(sharedAction)];
+</span><span class='line'>}
+</span><span class='line'>- (UIWebView *)webView{
+</span><span class='line'>    if (!_webView) {
+</span><span class='line'>        _webView=[[UIWebView alloc]init];
+</span><span class='line'>        _webView.frame=self.view.bounds;
+</span><span class='line'>    }
+</span><span class='line'>    return _webView;
+</span><span class='line'>}
+</span><span class='line'>#pragma mark -return URL for fileName
+</span><span class='line'>-(NSURL *)returnURLWithFileName:(NSString *)fileName{
+</span><span class='line'>    NSArray *arrs=[fileName componentsSeparatedByString:@"."];
+</span><span class='line'>    NSString *pathStr=[[NSBundle mainBundle] pathForResource:arrs.firstObject ofType:arrs[1]];
+</span><span class='line'>    NSURL *fileURL=[NSURL fileURLWithPath:pathStr];
+</span><span class='line'>    return fileURL;
+</span><span class='line'>    
+</span><span class='line'>    
+</span><span class='line'>}
+</span><span class='line'>
+</span><span class='line'>#pragma mark rightBarItem Action
+</span><span class='line'>-(void)sharedAction{
+</span><span class='line'>    NSLog(@"rightBarItem is clicked");
+</span><span class='line'>    NSURL *fileURL=[self returnURLWithFileName:@"demo.png"];
+</span><span class='line'>    NSArray *urls=@[fileURL];
+</span><span class='line'>    UIActivityViewController *activituVC=[[UIActivityViewController alloc]initWithActivityItems:urls applicationActivities:nil];
+</span><span class='line'>    NSArray *cludeActivitys=@[UIActivityTypePostToFacebook,
+</span><span class='line'>                               UIActivityTypePostToTwitter,
+</span><span class='line'>                               UIActivityTypePostToWeibo,
+</span><span class='line'>                               UIActivityTypePostToVimeo,
+</span><span class='line'>                               UIActivityTypeMessage,
+</span><span class='line'>                               UIActivityTypeMail,
+</span><span class='line'>                               UIActivityTypeCopyToPasteboard,
+</span><span class='line'>                               UIActivityTypePrint,
+</span><span class='line'>                               UIActivityTypeAssignToContact,
+</span><span class='line'>                               UIActivityTypeSaveToCameraRoll,
+</span><span class='line'>                               UIActivityTypeAddToReadingList,
+</span><span class='line'>                               UIActivityTypePostToFlickr,
+</span><span class='line'>                               UIActivityTypePostToTencentWeibo];
+</span><span class='line'>    activituVC.excludedActivityTypes=cludeActivitys;
+</span><span class='line'>
+</span><span class='line'>    [self presentViewController:activituVC animated:YES completion:nil];
+</span><span class='line'>
+</span><span class='line'>}
+</span><span class='line'>
+</span><span class='line'>- (void)didReceiveMemoryWarning {
+</span><span class='line'>    [super didReceiveMemoryWarning];
+</span><span class='line'>    // Dispose of any resources that can be recreated.
+</span><span class='line'>}
+</span><span class='line'>
+</span><span class='line'>@end</span></code></pre></td></tr></table></div></figure>
 
 
-<p>ok，以上总结有什么不对或瞎扯的地方欢迎在下方留言中指出。</p>
-
-<p>ps：无demo不文章，抱歉，真没有demo。</p>
+<p>详细的demo可以访问我的github去下载，希望可以一起交流一起进步：
+demo下载地址：<a href="https://github.com/voidxin/AirDropDemoWithZX">https://github.com/voidxin/AirDropDemoWithZX</a></p>
 ]]></content>
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[越分享越牛逼]]></title>
-    <link href="http://voidxin.github.io/blog/2016/07/23/yue-fen-xiang-yue-niu-bi/"/>
-    <updated>2016-07-23T14:39:43+08:00</updated>
-    <id>http://voidxin.github.io/blog/2016/07/23/yue-fen-xiang-yue-niu-bi</id>
-    <content type="html"><![CDATA[<p>  我是voidxin，一名正在探索的iOS程序员，从此我就入住Octopress啦，在以后的日子里，我将在这里分享我的工作、生活以及技术。
-  之前一直是在简书上发表一些东西，然后最近一段时间觉得是时候自己开个博客了，于是就有了这个博客。我会把之前在简书上的文章都搬家过来，毕竟那些都是我这么久以来的心血。
-  一路走一路感悟，感悟生活感悟工作，毕业整整一年，工作整整两年。没有成长为大牛，也没进入世界五百强，coding的路上，有彷徨也有希望，我坚持我所坚持的，相信我所相信的，不断学习，不断进步，相信明天会更好。</p>
+    <title type="html"><![CDATA[iOS监听H5页面goBack返回事件问题]]></title>
+    <link href="http://voidxin.github.io/blog/2016/03/20/iosjian-ting-h5ye-mian-gobackfan-hui-shi-jian-wen-ti/"/>
+    <updated>2016-03-20T20:39:57+08:00</updated>
+    <id>http://voidxin.github.io/blog/2016/03/20/iosjian-ting-h5ye-mian-gobackfan-hui-shi-jian-wen-ti</id>
+    <content type="html"><![CDATA[<p>从native直接push到一个webView页面，隐藏navigationBar，使用H5的头部为导航栏。此时会出现一个问题，就是push出的这个webview没有了原生的navigationBar，那么在点击H5页面上的返回按钮时怎么pop到之前的页面呢？</p>
+
+<p>  当然，我们可以使用上一遍博客提到的利用webViewjavascriptBridge的第三方来解决，这就需要H5和nativ相配合，如果h5是另一个团队做的，那么解决这么一个简单的问题确实显得有点小题大做。</p>
+
+<p>  所以可以使用一种更简单的方法，利用webView 的delegate方法来控制pop到H5页面还是Native页面。</p>
+
+<p>  由于系统尚且要兼容iOS7，加上还涉及到native向webView写cookie的问题，而WKWebView貌似只支持在iOS8以上使用，在cookie处理和缓存处理方面会有比较大的坑，所以项目中依旧使用的是UIWebView。在webView的代理方法中添加如下代码：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType{
+</span><span class='line'>    if (navigationType==UIWebViewNavigationTypeBackForward) {
+</span><span class='line'>        self.webView.canGoBack?[self.webView goBack]:[self.navigationController popViewControllerAnimated:YES];
+</span><span class='line'>    }
+</span><span class='line'>    return YES;
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>  这样就可以区分返回native还是H5</p>
+
+<p>补充：
+      以上适用整个页面都是H5的页面
+      如果只有navigationBar是原生的，此时应该重写pop事件：如下</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>-(void)navigationBarItemBackImage{
+</span><span class='line'>    UIImage *image=[UIImage imageNamed:@"navigationBack"];
+</span><span class='line'>    if ([PSBTools systemVersion]&gt;=7) {
+</span><span class='line'>        image= [image imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal];
+</span><span class='line'>    }
+</span><span class='line'>    self.navigationItem.leftBarButtonItem=[[UIBarButtonItem alloc]initWithImage:image style:UIBarButtonItemStyleDone target:self action:@selector(goBackAction)];
+</span><span class='line'>}
+</span><span class='line'>-(void)goBackAction{
+</span><span class='line'>    if (self.webView.canGoBack==YES) {
+</span><span class='line'>        [self.webView goBack];
+</span><span class='line'>    }else{
+</span><span class='line'>        [self.navigationController popViewControllerAnimated:YES];
+</span><span class='line'>    }
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
 ]]></content>
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[iOS10上手体验]]></title>
-    <link href="http://voidxin.github.io/blog/2016/06/14/ios10shang-shou-ti-yan/"/>
-    <updated>2016-06-14T22:49:49+08:00</updated>
-    <id>http://voidxin.github.io/blog/2016/06/14/ios10shang-shou-ti-yan</id>
-    <content type="html"><![CDATA[<p>今天凌晨，苹果2016年开发者技术大会召开。</p>
+    <title type="html"><![CDATA[iOS利用MQTT实现消息订阅和推送]]></title>
+    <link href="http://voidxin.github.io/blog/2016/03/13/iosli-yong-mqttshi-xian-xiao-xi-ding-yue-he-tui-song/"/>
+    <updated>2016-03-13T23:28:03+08:00</updated>
+    <id>http://voidxin.github.io/blog/2016/03/13/iosli-yong-mqttshi-xian-xiao-xi-ding-yue-he-tui-song</id>
+    <content type="html"><![CDATA[<p>  消息推送其实就是在客户端维护一个长连接，而MQTT是一种轻量级低消耗的长连接方式，相比于普通的socket链接来说，它对服务器的消耗没有那么大。其原理大致如下：</p>
 
-<p>  熬夜看直播下来，发现并没有什么让人惊喜的东西发布，似乎Macbook air也没有要更新的意思。一句话来概括就是：“本次发布会是软件盛会",更新了4大系统.把OS X改成了叫macOS.</p>
+<p>  服务器，服务器给客户端一个心跳应答，这样就形成客户端服务器的一次完整的握手，这个握手是让双方都知道他们之间的连接是没有断开，客户端是在线的。如果超过一个时间的阈值，客户端没有收到服务器的应答，或者服务器没有收到客户端的心跳，那么对客户端来说则断开与服务器的连接重新建立一。</p>
 
-<p>  为了体验最新的iOS10，一上班就开始忙了，首先用开发者账号登陆开发者中心，去下载固件，期待下载完成之后用iTunes安装，无奈，我的5s还是9.3.1的系统，iTunes提示我要先升级到9.3.2，一看安装包还不小，估计得下载好长一段时间。无奈只能换一种方式，那就是通过描述文件来安装.</p>
+<p>  在iOS端实现MQTT推送如下：</p>
 
-<p>于是在百度搜了个下载地址（<a href="http://www.99danji.com/news/89498/">http://www.99danji.com/news/89498/</a>  ）用Safari·打开下载即可。下载完成之后重启，重启之后果然出现iOS10安装版本的提示。接下来就是等待下载安装的过程。一路很顺畅（一开始担心5s变白板，看来是多余的担心了 ）。事实证明，5s安装之后比起9.3.1来说会感觉更卡顿。然后就是对于APP软件来说，就目前使用的情况，手机QQ出现的问题较多：</p>
+<pre><code>推送：
 
-<p> 1:按HOME键退出时，角标被无限放大一闪而过，</p>
+  首先判断服务器是否启动成功：
 
-<p> 2:消息通知的时候通知总是重复提示（已查看过的消息退出后又马上弹出推送通知）。</p>
 
-<p> 3:qq空间点击文字详情之后崩溃闪退
-微信APP没有出现像手机QQ那样的问题，但是微信在分享链接到朋友圈时会出现闪退的现象。然后，就像开发者大会上说的那样，一些系统软件的确也支持卸载，这里上图：</p>
 
-<p><img src="http://upload-images.jianshu.io/upload_images/1376067-c4727c61e6dbf497.PNG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="IMG_4793.PNG" /></p>
+推送内容：
+</code></pre>
 
-<p>  目前短时间体验下来就这点感受，更多的变化还需细细体验，不过在这里要奉劝5s的用户，如果不想体验没点击一次都零点八秒左右的延迟反应现象的话还是先不要安装iOS10了，等待正式版发布的时候，期待苹果能有优化。</p>
+<p>  订阅主题：</p>
+
+<p>最后释放连接:</p>
+
+<p>demo地址：<a href="https://github.com/voidxin/MQTTPush">https://github.com/voidxin/MQTTPush</a></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[iOS上传图片文件到七牛遇到的那些坑]]></title>
+    <link href="http://voidxin.github.io/blog/2016/03/12/iosshang-chuan-tu-pian-wen-jian-dao-qi-niu-yu-dao-de-na-xie-keng/"/>
+    <updated>2016-03-12T23:35:37+08:00</updated>
+    <id>http://voidxin.github.io/blog/2016/03/12/iosshang-chuan-tu-pian-wen-jian-dao-qi-niu-yu-dao-de-na-xie-keng</id>
+    <content type="html"><![CDATA[<p>最近公司的项目涉及到图片的保存，基于大量图片放在本地服务器会给公司增加不小的压力，所以选择了云存储，对比之后选择了七牛。</p>
+
+<p>  七牛的官方文档实在是太过于简单，下载SDK之后，根据官方 给的Demo，成功上传了图片。只是token的生成过程有些波折。</p>
+
+<p>由于七牛官方不提倡在客户端生成Token，所以没有给出相应的iOS端生成Token的代码。多方查找资料之后自己写了一个本地生成Token的方法如下：</p>
+
+<p>有了token之后就引入SDK，如下操作即可实现上传：</p>
+
+<p>一开始很纳闷，从放回信息中没有找到我们上传成功之后需要的图片的外链接地址，查阅官方文档之后才明白外链接地址需要我们自己拼接。首先，成功之后返回的resp是：</p>
+
+<p>resp {</p>
+
+<pre><code>          hash = "FhweZwfJipE4P0K6Mm_QbC6P0dxW";
+
+          key = zx12;
+</code></pre>
+
+<p>}</p>
+
+<p>如果失败resp为nil，所以图片的外链接地址就是你的 域名/key(返回的key)</p>
+
+<p>此demo下载地址：<a href="https://github.com/voidxin/UploadImageToQiniu">https://github.com/voidxin/UploadImageToQiniu</a></p>
 ]]></content>
   </entry>
   

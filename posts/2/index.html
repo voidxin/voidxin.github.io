@@ -9,7 +9,7 @@
   <meta name="author" content="voidxin">
 
   
-  <meta name="description" content="今天凌晨，苹果2016年开发者技术大会召开。 熬夜看直播下来，发现并没有什么让人惊喜的东西发布，似乎Macbook air也没有要更新的意思。一句话来概括就是：“本次发布会是软件盛会",更新了4大系统.把OS X改成了叫macOS. 为了体验最新的iOS10，一上班就开始忙了， &hellip;">
+  <meta name="description" content="最近公司的项目涉及到图片的保存，基于大量图片放在本地服务器会给公司增加不小的压力，所以选择了云存储，对比之后选择了七牛。 七牛的官方文档实在是太过于简单，下载SDK之后，根据官方 给的Demo，成功上传了图片。只是token的生成过程有些波折。 由于七牛官方不提倡在客户端生成Token， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -80,7 +80,7 @@
       
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2016/06/14/ios10shang-shou-ti-yan/">iOS10上手体验</a></h1>
+      <h1 class="entry-title"><a href="/blog/2016/03/12/iosshang-chuan-tu-pian-wen-jian-dao-qi-niu-yu-dao-de-na-xie-keng/">iOS上传图片文件到七牛遇到的那些坑</a></h1>
     
     
       <p class="meta">
@@ -96,33 +96,37 @@
   
 
 
-<time datetime="2016-06-14T22:49:49+08:00" pubdate data-updated="true"></time>
+<time datetime="2016-03-12T23:35:37+08:00" pubdate data-updated="true"></time>
         
-         | <a href="/blog/2016/06/14/ios10shang-shou-ti-yan/#disqus_thread">Comments</a>
+         | <a href="/blog/2016/03/12/iosshang-chuan-tu-pian-wen-jian-dao-qi-niu-yu-dao-de-na-xie-keng/#disqus_thread">Comments</a>
         
       </p>
     
   </header>
 
 
-  <div class="entry-content"><p>今天凌晨，苹果2016年开发者技术大会召开。</p>
+  <div class="entry-content"><p>最近公司的项目涉及到图片的保存，基于大量图片放在本地服务器会给公司增加不小的压力，所以选择了云存储，对比之后选择了七牛。</p>
 
-<p>  熬夜看直播下来，发现并没有什么让人惊喜的东西发布，似乎Macbook air也没有要更新的意思。一句话来概括就是：“本次发布会是软件盛会",更新了4大系统.把OS X改成了叫macOS.</p>
+<p>  七牛的官方文档实在是太过于简单，下载SDK之后，根据官方 给的Demo，成功上传了图片。只是token的生成过程有些波折。</p>
 
-<p>  为了体验最新的iOS10，一上班就开始忙了，首先用开发者账号登陆开发者中心，去下载固件，期待下载完成之后用iTunes安装，无奈，我的5s还是9.3.1的系统，iTunes提示我要先升级到9.3.2，一看安装包还不小，估计得下载好长一段时间。无奈只能换一种方式，那就是通过描述文件来安装.</p>
+<p>由于七牛官方不提倡在客户端生成Token，所以没有给出相应的iOS端生成Token的代码。多方查找资料之后自己写了一个本地生成Token的方法如下：</p>
 
-<p>于是在百度搜了个下载地址（<a href="http://www.99danji.com/news/89498/">http://www.99danji.com/news/89498/</a>  ）用Safari·打开下载即可。下载完成之后重启，重启之后果然出现iOS10安装版本的提示。接下来就是等待下载安装的过程。一路很顺畅（一开始担心5s变白板，看来是多余的担心了 ）。事实证明，5s安装之后比起9.3.1来说会感觉更卡顿。然后就是对于APP软件来说，就目前使用的情况，手机QQ出现的问题较多：</p>
+<p>有了token之后就引入SDK，如下操作即可实现上传：</p>
 
-<p> 1:按HOME键退出时，角标被无限放大一闪而过，</p>
+<p>一开始很纳闷，从放回信息中没有找到我们上传成功之后需要的图片的外链接地址，查阅官方文档之后才明白外链接地址需要我们自己拼接。首先，成功之后返回的resp是：</p>
 
-<p> 2:消息通知的时候通知总是重复提示（已查看过的消息退出后又马上弹出推送通知）。</p>
+<p>resp {</p>
 
-<p> 3:qq空间点击文字详情之后崩溃闪退
-微信APP没有出现像手机QQ那样的问题，但是微信在分享链接到朋友圈时会出现闪退的现象。然后，就像开发者大会上说的那样，一些系统软件的确也支持卸载，这里上图：</p>
+<pre><code>          hash = "FhweZwfJipE4P0K6Mm_QbC6P0dxW";
 
-<p><img src="http://upload-images.jianshu.io/upload_images/1376067-c4727c61e6dbf497.PNG?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240" alt="IMG_4793.PNG" /></p>
+          key = zx12;
+</code></pre>
 
-<p>  目前短时间体验下来就这点感受，更多的变化还需细细体验，不过在这里要奉劝5s的用户，如果不想体验没点击一次都零点八秒左右的延迟反应现象的话还是先不要安装iOS10了，等待正式版发布的时候，期待苹果能有优化。</p>
+<p>}</p>
+
+<p>如果失败resp为nil，所以图片的外链接地址就是你的 域名/key(返回的key)</p>
+
+<p>此demo下载地址：<a href="https://github.com/voidxin/UploadImageToQiniu">https://github.com/voidxin/UploadImageToQiniu</a></p>
 </div>
   
   
@@ -145,23 +149,23 @@
   <ul id="recent_posts">
     
       <li class="post">
-        <a href="/blog/2016/07/23/iosli-yong-mqttshi-xian-xiao-xi-ding-yue-he-tui-song/">iOS利用MQTT实现消息订阅和推送</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2016/07/23/iosshang-chuan-tu-pian-wen-jian-dao-qi-niu-yu-dao-de-na-xie-keng/">iOS上传图片文件到七牛遇到的那些坑</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2016/07/23/shi-yong-uiactivityviewcontrollershi-xian-airdropfen-xiang/">使用UIActivityViewController实现AirDrop分享</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2016/07/23/mvvmmo-shi-chu-ti-yan-(shi-yong-reactivecocoahuo-qu-wang-luo-shu-ju/">MVVM模式初体验（使用ReactiveCocoa获取网络数据)</a>
-      </li>
-    
-      <li class="post">
         <a href="/blog/2016/07/23/objective-c-runtimena-xie-shi-er/">Objective-C runtime那些事儿</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/07/23/qi-niu-yun-chu-cun-shi-xian-iosqi-ye-ban-fen-fa/">七牛云储存实现iOS企业版分发</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/07/23/yue-fen-xiang-yue-niu-bi/">越分享越牛逼</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/07/22/xcodelu-jing-gai-bian-dao-zhi-cocoapodsbao-cuo-de-jie-jue-ban-fa/">Xcode路径改变导致CocoaPods报错的解决办法</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/07/16/jspatchde-shi-yong/">JSPatch的使用</a>
       </li>
     
   </ul>
