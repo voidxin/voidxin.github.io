@@ -7,7 +7,7 @@ categories:
 ---
 JSpatch的更多用法可以去github上找文档。不多解释。
 先来个简单的demo：
-
+<!--more-->
 1：先百度“JSPatch”，进入如下页面：
 
 ![首页@2x.png](http://upload-images.jianshu.io/upload_images/1376067-e4b6df49a3f1a642.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)

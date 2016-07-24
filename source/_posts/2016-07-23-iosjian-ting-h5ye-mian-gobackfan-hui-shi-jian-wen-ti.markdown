@@ -6,7 +6,7 @@ comments: true
 categories: 
 ---
 从native直接push到一个webView页面，隐藏navigationBar，使用H5的头部为导航栏。此时会出现一个问题，就是push出的这个webview没有了原生的navigationBar，那么在点击H5页面上的返回按钮时怎么pop到之前的页面呢？
-
+<!--more-->
   当然，我们可以使用上一遍博客提到的利用webViewjavascriptBridge的第三方来解决，这就需要H5和nativ相配合，如果h5是另一个团队做的，那么解决这么一个简单的问题确实显得有点小题大做。
   
   所以可以使用一种更简单的方法，利用webView 的delegate方法来控制pop到H5页面还是Native页面。

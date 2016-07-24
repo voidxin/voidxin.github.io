@@ -7,7 +7,7 @@ categories:
 ---
 今天闲来无事，无意中看了一篇利用AirDrop实现文件传输的文章，于是动手写了一个很简单的demo。其实就是使用UIActivityViewController。
 具体实现如下：
-
+<!--more-->
 ```
 #import "DemoViewController.h"
 @interface DemoViewController ()
