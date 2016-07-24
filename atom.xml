@@ -4,7 +4,7 @@
   <title><![CDATA[voidxin'blog]]></title>
   <link href="http://voidxin.github.io/atom.xml" rel="self"/>
   <link href="http://voidxin.github.io/"/>
-  <updated>2016-07-24T16:12:10+08:00</updated>
+  <updated>2016-07-24T16:20:02+08:00</updated>
   <id>http://voidxin.github.io/</id>
   <author>
     <name><![CDATA[voidxin]]></name>
@@ -18,8 +18,12 @@
     <link href="http://voidxin.github.io/blog/2016/07/23/yue-fen-xiang-yue-niu-bi/"/>
     <updated>2016-07-23T14:39:43+08:00</updated>
     <id>http://voidxin.github.io/blog/2016/07/23/yue-fen-xiang-yue-niu-bi</id>
-    <content type="html"><![CDATA[<p>  我是voidxin，一名正在探索的iOS程序员，从此我就入住Octopress啦，在以后的日子里，我将在这里分享我的工作、生活以及技术。
-  之前一直是在简书上发表一些东西，然后最近一段时间觉得是时候自己开个博客了，于是就有了这个博客。我会把之前在简书上的文章都搬家过来，毕竟那些都是我这么久以来的心血。
+    <content type="html"><![CDATA[<p>  我是voidxin，一名正在探索的iOS程序员，从此我就入住Octopress啦，在以后的日子里，我将在这里分享我的工作、生活以及技术。</p>
+
+<!--more-->
+
+
+<p>  之前一直是在简书上发表一些东西，然后最近一段时间觉得是时候自己开个博客了，于是就有了这个博客。我会把之前在简书上的文章都搬家过来，毕竟那些都是我这么久以来的心血。
   一路走一路感悟，感悟生活感悟工作，毕业整整一年，工作整整两年。没有成长为大牛，也没进入世界五百强，coding的路上，有彷徨也有希望，我坚持我所坚持的，相信我所相信的，不断学习，不断进步，相信明天会更好。</p>
 ]]></content>
   </entry>
@@ -30,8 +34,12 @@
     <updated>2016-07-22T11:39:18+08:00</updated>
     <id>http://voidxin.github.io/blog/2016/07/22/qi-niu-yun-chu-cun-shi-xian-iosqi-ye-ban-fen-fa</id>
     <content type="html"><![CDATA[<p>iOS企业证书的发版这里就不多说了。
-由于app现在放在公司自己的服务器中，为了实现https的plist下载链接还特意把plist挂在了开源中国上。小公司，带宽小，多用户升级的时候给公司服务器带来不小的压力。所以最近工头有把ipa挂在七牛上去的想法，这样就可以有效的缓解服务器的压力。
-企业版分发的plist下载链接必须是https协议的，所以需要SSL证书。如果你公司没有证书，那么可以使用七牛。
+由于app现在放在公司自己的服务器中，为了实现https的plist下载链接还特意把plist挂在了开源中国上。小公司，带宽小，多用户升级的时候给公司服务器带来不小的压力。所以最近工头有把ipa挂在七牛上去的想法，这样就可以有效的缓解服务器的压力。</p>
+
+<!--more-->
+
+
+<p>企业版分发的plist下载链接必须是https协议的，所以需要SSL证书。如果你公司没有证书，那么可以使用七牛。
 接下来开始步骤：</p>
 
 <p>1：使用xcode打包生成ipa文件（过程不多说）</p>
@@ -216,6 +224,9 @@ ok，https链接的plist文件已生成，复制链接，在代码中：</p>
     <id>http://voidxin.github.io/blog/2016/07/22/xcodelu-jing-gai-bian-dao-zhi-cocoapodsbao-cuo-de-jie-jue-ban-fa</id>
     <content type="html"><![CDATA[<p>这几天心血来潮，更新了下Mac系统，然后装了下Xcode8装逼，接下来就懵逼了。</p>
 
+<!--more-->
+
+
 <p>由于之前的Xcode是7.1的一直没升级，本想体验体验Xcode8的，所以装完Xcode8之后Xcode7.1也没有删掉，一直两个Xcode一起用着，用了几天之后觉得Xcode8挺稳定的，于是就删了Xcode7，故事由此开始了。</p>
 
 <p>删了Xcode7的几天后，发现Xcode8 bug还是蛮多的，不是很稳定，并且大家都不怎么推荐这么早就使用Xcode8，于是忍痛割爱（要知道这可是我下了好几个小时才下下来的啊）把Xcode8删了准备用回Xcode7.1。于是我就从废纸篓里恢复了几天前删除了的Xcode7.1.庆幸竟然还能用（暗暗窃喜).</p>
@@ -261,6 +272,9 @@ ok，https链接的plist文件已生成，复制链接，在代码中：</p>
     <id>http://voidxin.github.io/blog/2016/07/16/jspatchde-shi-yong</id>
     <content type="html"><![CDATA[<p>JSpatch的更多用法可以去github上找文档。不多解释。
 先来个简单的demo：</p>
+
+<!--more-->
+
 
 <p>1：先百度“JSPatch”，进入如下页面：</p>
 
@@ -508,6 +522,9 @@ ok，https链接的plist文件已生成，复制链接，在代码中：</p>
     <content type="html"><![CDATA[<p>runtime 号称iOS开发的黑魔法。</p>
 
 <p>现在就让我来探究探究runtime，一来作为学习笔记，二来给有需要的人参考。</p>
+
+<!--more-->
+
 
 <p>在使用runtime的时候，我们可能会看到一些奇怪的字段，现在就让我来一一讲解一下：</p>
 
@@ -757,6 +774,9 @@ ok，https链接的plist文件已生成，复制链接，在代码中：</p>
     <id>http://voidxin.github.io/blog/2016/06/15/mvvmmo-shi-chu-ti-yan-(shi-yong-reactivecocoahuo-qu-wang-luo-shu-ju</id>
     <content type="html"><![CDATA[<p>使用RAC也有一段时间了，由于此前的项目都是使用的MVC模式，网络请求都封装在固定的模块中，抽取出来十分不方便，所以到目前为止并没有涉及到使用RAC去做获取网络请求的情景。</p>
 
+<!--more-->
+
+
 <p>  近期，着手重构目前手上的项目，准备给臃肿的Controller瘦身，MVVM貌似是一个不错的选择（既然使用了RAC，那为什么不使用MVVM呢?)。于是，开始上手体验MVVM模式和RAC的结合使用（RAC的基础知识在这就不介绍了，百度一下，一大推老司机都有分享）。不用不知道，一用才发现RAC和MVVM简直是绝配啊，那体验真是改变了我对编程的传统观念（函数响应式编程真心好用）。</p>
 
 <p>  这里用一个小demo来举例：</p>
@@ -983,6 +1003,9 @@ ok，https链接的plist文件已生成，复制链接，在代码中：</p>
     <id>http://voidxin.github.io/blog/2016/06/14/ios10shang-shou-ti-yan</id>
     <content type="html"><![CDATA[<p>今天凌晨，苹果2016年开发者技术大会召开。</p>
 
+<!--more-->
+
+
 <p>  熬夜看直播下来，发现并没有什么让人惊喜的东西发布，似乎Macbook air也没有要更新的意思。一句话来概括就是：“本次发布会是软件盛会",更新了4大系统.把OS X改成了叫macOS.</p>
 
 <p>  为了体验最新的iOS10，一上班就开始忙了，首先用开发者账号登陆开发者中心，去下载固件，期待下载完成之后用iTunes安装，无奈，我的5s还是9.3.1的系统，iTunes提示我要先升级到9.3.2，一看安装包还不小，估计得下载好长一段时间。无奈只能换一种方式，那就是通过描述文件来安装.</p>
@@ -1009,6 +1032,9 @@ ok，https链接的plist文件已生成，复制链接，在代码中：</p>
     <id>http://voidxin.github.io/blog/2016/05/08/shi-yong-uiactivityviewcontrollershi-xian-airdropfen-xiang</id>
     <content type="html"><![CDATA[<p>今天闲来无事，无意中看了一篇利用AirDrop实现文件传输的文章，于是动手写了一个很简单的demo。其实就是使用UIActivityViewController。
 具体实现如下：</p>
+
+<!--more-->
+
 
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 <span class='line-number'>2</span>
@@ -1174,6 +1200,9 @@ demo下载地址：<a href="https://github.com/voidxin/AirDropDemoWithZX">https:
     <id>http://voidxin.github.io/blog/2016/03/20/iosjian-ting-h5ye-mian-gobackfan-hui-shi-jian-wen-ti</id>
     <content type="html"><![CDATA[<p>从native直接push到一个webView页面，隐藏navigationBar，使用H5的头部为导航栏。此时会出现一个问题，就是push出的这个webview没有了原生的navigationBar，那么在点击H5页面上的返回按钮时怎么pop到之前的页面呢？</p>
 
+<!--more-->
+
+
 <p>  当然，我们可以使用上一遍博客提到的利用webViewjavascriptBridge的第三方来解决，这就需要H5和nativ相配合，如果h5是另一个团队做的，那么解决这么一个简单的问题确实显得有点小题大做。</p>
 
 <p>  所以可以使用一种更简单的方法，利用webView 的delegate方法来控制pop到H5页面还是Native页面。</p>
@@ -1239,6 +1268,9 @@ demo下载地址：<a href="https://github.com/voidxin/AirDropDemoWithZX">https:
     <id>http://voidxin.github.io/blog/2016/03/13/iosli-yong-mqttshi-xian-xiao-xi-ding-yue-he-tui-song</id>
     <content type="html"><![CDATA[<p>  消息推送其实就是在客户端维护一个长连接，而MQTT是一种轻量级低消耗的长连接方式，相比于普通的socket链接来说，它对服务器的消耗没有那么大。其原理大致如下：</p>
 
+<!--more-->
+
+
 <p>  服务器，服务器给客户端一个心跳应答，这样就形成客户端服务器的一次完整的握手，这个握手是让双方都知道他们之间的连接是没有断开，客户端是在线的。如果超过一个时间的阈值，客户端没有收到服务器的应答，或者服务器没有收到客户端的心跳，那么对客户端来说则断开与服务器的连接重新建立一。</p>
 
 <p>  在iOS端实现MQTT推送如下：</p>
@@ -1266,6 +1298,9 @@ demo下载地址：<a href="https://github.com/voidxin/AirDropDemoWithZX">https:
     <updated>2016-03-12T23:35:37+08:00</updated>
     <id>http://voidxin.github.io/blog/2016/03/12/iosshang-chuan-tu-pian-wen-jian-dao-qi-niu-yu-dao-de-na-xie-keng</id>
     <content type="html"><![CDATA[<p>最近公司的项目涉及到图片的保存，基于大量图片放在本地服务器会给公司增加不小的压力，所以选择了云存储，对比之后选择了七牛。</p>
+
+<!--more-->
+
 
 <p>  七牛的官方文档实在是太过于简单，下载SDK之后，根据官方 给的Demo，成功上传了图片。只是token的生成过程有些波折。</p>
 
